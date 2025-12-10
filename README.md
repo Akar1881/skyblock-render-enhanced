@@ -11,6 +11,29 @@ Perfect for **hub drops**, **foraging**, **slayer bosses**, **end lobbies**, or 
 
 ---
 
+## 📸 Screenshots
+
+### 🔻 Player Render OFF  
+A crowded hub where all other players are hidden.
+
+![Render Off](pictures/toggleoff.png)
+
+---
+
+### 🔺 Player Render ON  
+Players are visible again after toggling.
+
+![Render On](pictures/toggleon.png)
+
+---
+
+### ⚙ Configuration GUI  
+Clean and simple settings menu powered by Cloth Config.
+
+![Config GUI](pictures/configgui.png)
+
+---
+
 ## ✨ Features
 
 ### ✔ Player Hiding  
@@ -87,33 +110,30 @@ git clone https://github.com/akar1881/skyblock-render-enhanced.git
 cd skyblock-render-enhanced
 ./gradlew build
 ```
-
 The compiled JAR will appear in:
-
-```
 build/libs/
-```
 
 ---
 
-## 📦 Requirements
+📦 Requirements
 
-- Minecraft **1.21.10**
-- Fabric Loader **0.18.2+**
-- Fabric API
-- Cloth Config
-- Java **21+**
+Minecraft 1.21.10
+Fabric Loader 0.18.2+
+Fabric API
+Cloth Config
+Java 21+
 
----
-
-## 🏆 Credits
-
-- Inspired by **SRP (Select Player Renderer)** by Syfe  
-- Fully rewritten for Fabric 1.21.10 with Cloth Config  
-- Developed by **akar1881**
 
 ---
 
-## 📄 License
+🏆 Credits
 
-This project is licensed under the **GPL 3.0** License.
+Inspired by SRP (Select Player Renderer) by Syfe
+Fully rewritten for Fabric 1.21.10 with Cloth Config
+Developed by akar1881
+
+---
+
+📄 License
+
+This project is licensed under the GPL 3.0 License.
