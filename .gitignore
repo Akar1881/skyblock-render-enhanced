@@ -1,0 +1,41 @@
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+.vscode/
+
+# gradle
+build
+.gradle
+
+# other
+eclipse
+run
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Build artifacts - keep gradle wrapper
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# Local config
+local.properties
+
+# Fabric/Minecraft
+remappedSrc/

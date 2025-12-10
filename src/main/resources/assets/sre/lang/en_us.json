@@ -1,0 +1,8 @@
+{
+    "key.sre.toggle": "Toggle SRE",
+    "key.sre.opengui": "Open SRE GUI",
+    "key.categories.sre": "Skyblock Render Enhanced",
+    "gui.sre.title": "Skyblock Render Enhanced",
+    "gui.sre.renderPlayers": "Render Players",
+    "gui.sre.description.renderplayers": "Toggle whether to show only selected players or all players."
+}

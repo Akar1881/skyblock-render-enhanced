@@ -1,0 +1,37 @@
+{
+    "schemaVersion": 1,
+    "id": "sre",
+    "version": "${version}",
+    "name": "Skyblock Render Enhanced",
+    "description": "A Fabric mod for Hypixel Skyblock that allows you to hide all players except selected ones, useful for hub drops and crowded areas.",
+    "authors": [
+        "akar1881"
+    ],
+    "contact": {
+        "sources": "https://github.com/akar1881/skyblock-render-enhanced"
+    },
+    "license": "GPL-3.0",
+    "icon": "assets/sre/icon.png",
+    "environment": "client",
+    "entrypoints": {
+        "client": [
+            "me.akar1881.sre.SkyblockRenderEnhanced"
+        ],
+        "modmenu": [
+            "me.akar1881.sre.compat.ModMenuIntegration"
+        ]
+    },
+    "mixins": [
+        "sre.mixins.json"
+    ],
+    "accessWidener": "sre.accesswidener",
+    "depends": {
+        "fabricloader": ">=0.18.0",
+        "minecraft": "~1.21.10",
+        "java": ">=21",
+        "fabric-api": "*"
+    },
+    "suggests": {
+        "modmenu": "*"
+    }
+}
