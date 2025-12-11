@@ -11,55 +11,58 @@ Perfect for **hub drops**, **foraging**, **slayer bosses**, **end lobbies**, or 
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
-### 🔻 Player Render OFF  
+### Player Render OFF  
 A crowded hub where all other players are hidden.
 
 ![Render Off](pictures/toggleoff.png)
 
 ---
 
-### 🔺 Player Render ON  
+### Player Render ON  
 Players are visible again after toggling.
 
 ![Render On](pictures/toggleon.png)
 
 ---
 
-### ⚙ Configuration GUI  
-Clean and simple settings menu powered by Cloth Config.
+### Configuration GUI  
+Clean and simple settings menu powered by YACL (Yet Another Config Lib).
 
 ![Config GUI](pictures/configgui.png)
 
 ---
 
-## ✨ Features
+## Features
 
-### ✔ Player Hiding  
+### Player Hiding  
 Hide all players except those you've added to your allowlist.
 
-### ✔ Whitelist System  
+### Whitelist System  
 Keep specific players **always visible**, even when hiding everyone else.
 
-### ✔ Beautiful Config GUI (Cloth Config)  
-All settings can be controlled from a clean configuration menu.
+### Beautiful Config GUI (YACL)  
+All settings can be controlled from a clean configuration menu powered by YACL.
 
-### ✔ Clean Command System  
+### Clean Command System  
 Simple, modern `/sre` commands for full control.
 
-### ✔ Keybind Support  
+### Keybind Support  
 Quickly toggle the renderer or open the GUI without typing commands.
 
-### ✔ Automatic NPC Detection  
+### Automatic NPC Detection  
 NPCs remain visible, so nothing important disappears.
 
-### ✔ Lightweight & Skyblock-Friendly  
+### Party Member Support  
+Automatically render Hypixel party members - perfect for Diana events!
+
+### Lightweight & Skyblock-Friendly  
 Runs smoothly even in the busiest lobbies.
 
 ---
 
-## 📥 Installation
+## Installation
 
 1. Install **Fabric Loader 0.18.2+** for Minecraft 1.21.10  
    https://fabricmc.net/use/installer/
@@ -68,7 +71,7 @@ Runs smoothly even in the busiest lobbies.
    https://modrinth.com/mod/fabric-api
 
 3. Download **Skyblock Render Enhanced** from Modrinth:  
-   ➜ https://modrinth.com/mod/skyblocker-render-enhanced
+   https://modrinth.com/mod/skyblocker-render-enhanced
 
 4. Place the `.jar` file inside:  
    `.minecraft/mods/`
@@ -77,7 +80,7 @@ Runs smoothly even in the busiest lobbies.
 
 ---
 
-## 🧭 Usage
+## Usage
 
 ### Commands
 
@@ -86,7 +89,6 @@ Runs smoothly even in the busiest lobbies.
 | `/sre` | Open the config GUI |
 | `/sre help` | Show list of commands |
 | `/sre toggle` | Toggle the mod on/off |
-| `/sre whitelist list` | List whitelisted players |
 | `/sre whitelist add <player>` | Add player to whitelist |
 | `/sre whitelist remove <player>` | Remove player from whitelist |
 
@@ -94,7 +96,7 @@ Runs smoothly even in the busiest lobbies.
 
 ### Keybinds
 
-(Default, customizable under **Controls → Keybinds**)
+(Default, customizable under **Controls > Keybinds**)
 
 | Key | Action |
 |-----|--------|
@@ -103,7 +105,7 @@ Runs smoothly even in the busiest lobbies.
 
 ---
 
-## 🛠 Building from Source
+## Building from Source
 
 ```bash
 git clone https://github.com/akar1881/skyblock-render-enhanced.git
@@ -115,25 +117,23 @@ build/libs/
 
 ---
 
-📦 Requirements
+## Requirements
 
-Minecraft 1.21.10
-Fabric Loader 0.18.2+
-Fabric API
-Cloth Config
-Java 21+
-
+- Minecraft 1.21.10
+- Fabric Loader 0.18.2+
+- Fabric API
+- Java 21+
 
 ---
 
-🏆 Credits
+## Credits
 
-Inspired by SRP (Select Player Renderer) by Syfe
-Fully rewritten for Fabric 1.21.10 with Cloth Config
-Developed by akar1881
+- Inspired by SRP (Select Player Renderer) by Syfe
+- Fully rewritten for Fabric 1.21.10 with YACL
+- Developed by akar1881
 
 ---
 
-📄 License
+## License
 
 This project is licensed under the GPL 3.0 License.

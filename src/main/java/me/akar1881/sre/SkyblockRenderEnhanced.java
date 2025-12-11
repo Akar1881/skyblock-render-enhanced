@@ -4,6 +4,7 @@ import me.akar1881.sre.commands.SRECommand;
 import me.akar1881.sre.config.ConfigHandler;
 import me.akar1881.sre.events.SREEventHandler;
 import me.akar1881.sre.keybinds.Keybinds;
+import me.akar1881.sre.party.PartyHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import org.slf4j.Logger;
@@ -29,6 +30,8 @@ public class SkyblockRenderEnhanced implements ClientModInitializer {
         });
         
         SREEventHandler.register();
+        
+        PartyHandler.register();
         
         LOGGER.info("{} initialized successfully!", MOD_NAME);
     }

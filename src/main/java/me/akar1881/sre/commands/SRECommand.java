@@ -13,6 +13,7 @@ import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
+import java.util.List;
 import java.util.Set;
 
 public class SRECommand {
@@ -26,18 +27,8 @@ public class SRECommand {
         return builder.buildFuture();
     };
     
-    private static final SuggestionProvider<FabricClientCommandSource> RENDERED_PLAYERS_SUGGESTION = (context, builder) -> {
-        Set<String> players = ConfigHandler.getPlayersToRenderSet();
-        for (String player : players) {
-            if (player.toLowerCase().startsWith(builder.getRemainingLowerCase())) {
-                builder.suggest(player);
-            }
-        }
-        return builder.buildFuture();
-    };
-    
     private static final SuggestionProvider<FabricClientCommandSource> WHITELISTED_PLAYERS_SUGGESTION = (context, builder) -> {
-        Set<String> players = ConfigHandler.getWhitelistedPlayersSet();
+        List<String> players = ConfigHandler.getPlayersToRenderList();
         for (String player : players) {
             if (player.toLowerCase().startsWith(builder.getRemainingLowerCase())) {
                 builder.suggest(player);
@@ -87,6 +78,7 @@ public class SRECommand {
                         .executes(context -> {
                             String playerName = StringArgumentType.getString(context, "player");
                             ConfigHandler.addPlayerToRender(playerName);
+                            SREGui.syncFromConfigHandler();
                             context.getSource().sendFeedback(Text.literal("[SRE] ")
                                 .formatted(Formatting.GREEN)
                                 .append(Text.literal("Added player to whitelist: ")
@@ -101,6 +93,7 @@ public class SRECommand {
                         .executes(context -> {
                             String playerName = StringArgumentType.getString(context, "player");
                             ConfigHandler.removePlayerToRender(playerName);
+                            SREGui.syncFromConfigHandler();
                             context.getSource().sendFeedback(Text.literal("[SRE] ")
                                 .formatted(Formatting.GREEN)
                                 .append(Text.literal("Removed player from whitelist: ")
@@ -109,18 +102,6 @@ public class SRECommand {
                                     .formatted(Formatting.BOLD)));
                             return 1;
                         })))
-                .then(ClientCommandManager.literal("list")
-                    .executes(context -> {
-                        Set<String> players = ConfigHandler.getPlayersToRenderSet();
-                        String str = players.isEmpty() ? "none" : String.join(", ", players);
-                        context.getSource().sendFeedback(Text.literal("[SRE] ")
-                            .formatted(Formatting.GREEN)
-                            .append(Text.literal("Whitelisted players: ")
-                                .formatted(Formatting.BLUE))
-                            .append(Text.literal(str)
-                                .formatted(Formatting.BOLD)));
-                        return 1;
-                    }))
             )
         );
     }
@@ -147,10 +128,6 @@ public class SRECommand {
             .append(Text.literal("+ ")
                 .formatted(Formatting.RED))
             .append(Text.literal("/sre whitelist remove <player> - Remove player\n")
-                .formatted(Formatting.BLUE))
-            .append(Text.literal("+ ")
-                .formatted(Formatting.RED))
-            .append(Text.literal("/sre whitelist list - Show whitelisted players\n")
                 .formatted(Formatting.BLUE))
             .append(Text.literal("------------------------------------------")
                 .formatted(Formatting.DARK_BLUE));

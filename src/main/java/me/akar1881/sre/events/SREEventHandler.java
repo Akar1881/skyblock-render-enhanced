@@ -3,15 +3,27 @@ package me.akar1881.sre.events;
 import me.akar1881.sre.config.ConfigHandler;
 import me.akar1881.sre.gui.SREGui;
 import me.akar1881.sre.keybinds.Keybinds;
+import me.akar1881.sre.party.PartyHandler;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 public class SREEventHandler {
+    private static int tickCounter = 0;
+    private static final int PARTY_UPDATE_INTERVAL = 200;
+    
     public static void register() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.player == null) return;
+            
+            tickCounter++;
+            if (tickCounter >= PARTY_UPDATE_INTERVAL) {
+                tickCounter = 0;
+                if (ConfigHandler.renderPartyMembers) {
+                    PartyHandler.requestPartyInfo();
+                }
+            }
             
             if (ConfigHandler.keybindsEnabled) {
                 while (Keybinds.toggleSre.wasPressed()) {

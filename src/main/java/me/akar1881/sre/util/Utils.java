@@ -1,5 +1,7 @@
 package me.akar1881.sre.util;
 
+import me.akar1881.sre.config.ConfigHandler;
+import me.akar1881.sre.party.PartyHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -25,17 +27,13 @@ public class Utils {
             return true;
         }
         
-        String playerName = player.getGameProfile().name();
-        
-        String[] playersToRender = me.akar1881.sre.config.ConfigHandler.playersToRender.split(",");
-        for (String name : playersToRender) {
-            if (name.equals(playerName)) {
-                return true;
-            }
+        if (ConfigHandler.renderPartyMembers && PartyHandler.isPartyMember(player.getUuid())) {
+            return true;
         }
         
-        String[] whitelistedPlayers = me.akar1881.sre.config.ConfigHandler.whitelistedPlayers.split(",");
-        for (String name : whitelistedPlayers) {
+        String playerName = player.getGameProfile().name();
+        
+        for (String name : ConfigHandler.playersToRender) {
             if (name.equals(playerName)) {
                 return true;
             }
