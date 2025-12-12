@@ -2,8 +2,10 @@ package me.akar1881.sre.gui;
 
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
+import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import me.akar1881.sre.config.ConfigHandler;
+import me.akar1881.sre.config.ConfigHandler.SlayerMode;
 import me.akar1881.sre.keybinds.Keybinds;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -21,9 +23,11 @@ public class SREGui {
             Keybinds.toggleSre.getBoundKeyLocalizedText().getString() : "V";
         String guiKey = Keybinds.openGui != null ? 
             Keybinds.openGui.getBoundKeyLocalizedText().getString() : "M";
+        String slayerKey = Keybinds.toggleSlayer != null ?
+            Keybinds.toggleSlayer.getBoundKeyLocalizedText().getString() : "B";
 
         return YetAnotherConfigLib.createBuilder()
-            .title(Text.literal("Skyblock Render Enhanced v1.0.1"))
+            .title(Text.literal("Skyblock Render Enhanced v1.0.3"))
             .category(ConfigCategory.createBuilder()
                 .name(Text.literal("General"))
                 .tooltip(Text.literal("General settings for SRE"))
@@ -75,7 +79,62 @@ public class SREGui {
                     .description(OptionDescription.of(Text.literal("Current keybind assignments")))
                     .option(LabelOption.create(Text.literal("Toggle Mod: ").append(Text.literal(toggleKey).formatted(Formatting.YELLOW))))
                     .option(LabelOption.create(Text.literal("Open GUI: ").append(Text.literal(guiKey).formatted(Formatting.YELLOW))))
+                    .option(LabelOption.create(Text.literal("Toggle Slayer: ").append(Text.literal(slayerKey).formatted(Formatting.YELLOW))))
                     .option(LabelOption.create(Text.literal("Configure keybinds in Minecraft Options > Controls").formatted(Formatting.GRAY)))
+                    .build())
+                .build())
+            .category(ConfigCategory.createBuilder()
+                .name(Text.literal("Slayer"))
+                .tooltip(Text.literal("Control slayer boss visibility"))
+                .option(Option.<SlayerMode>createBuilder()
+                    .name(Text.literal("Slayer Mode"))
+                    .description(OptionDescription.of(Text.literal(
+                        "OFF: Show all slayer bosses (feature disabled)\n" +
+                        "HIDE: Hide other players' slayer bosses\n" +
+                        "GLOW: Highlight your/party/whitelist bosses with glow effect")))
+                    .binding(
+                        SlayerMode.OFF,
+                        () -> ConfigHandler.slayerMode,
+                        newValue -> {
+                            ConfigHandler.slayerMode = newValue;
+                            ConfigHandler.syncAndSave();
+                        })
+                    .controller(opt -> EnumControllerBuilder.create(opt)
+                        .enumClass(SlayerMode.class)
+                        .formatValue(mode -> Text.literal(mode.getDisplayName()).formatted(
+                            mode == SlayerMode.OFF ? Formatting.GRAY :
+                            mode == SlayerMode.HIDE ? Formatting.RED :
+                            Formatting.GREEN)))
+                    .build())
+                .option(Option.<Boolean>createBuilder()
+                    .name(Text.literal("Link Slayer Toggle To Player Toggle"))
+                    .description(OptionDescription.of(Text.literal("When enabled, pressing your player render key will also toggle all slayer boss visibility.")))
+                    .binding(
+                        false,
+                        () -> ConfigHandler.linkSlayerToPlayer,
+                        newValue -> {
+                            ConfigHandler.linkSlayerToPlayer = newValue;
+                            ConfigHandler.syncAndSave();
+                        })
+                    .controller(opt -> BooleanControllerBuilder.create(opt)
+                        .formatValue(val -> val ? Text.literal("YES").formatted(Formatting.GREEN) : Text.literal("NO").formatted(Formatting.RED))
+                        .coloured(true))
+                    .build())
+                .group(OptionGroup.createBuilder()
+                    .name(Text.literal("Keybind Info"))
+                    .collapsed(false)
+                    .option(LabelOption.create(Text.literal("Toggle Slayer Bosses: ").append(Text.literal(slayerKey).formatted(Formatting.YELLOW))))
+                    .build())
+                .group(OptionGroup.createBuilder()
+                    .name(Text.literal("Slayer Bosses"))
+                    .collapsed(false)
+                    .description(OptionDescription.of(Text.literal("The following slayer bosses are detected:")))
+                    .option(LabelOption.create(Text.literal("• Voidgloom Seraph").formatted(Formatting.LIGHT_PURPLE)))
+                    .option(LabelOption.create(Text.literal("• Revenant Horror").formatted(Formatting.DARK_GREEN)))
+                    .option(LabelOption.create(Text.literal("• Tarantula Broodfather").formatted(Formatting.RED)))
+                    .option(LabelOption.create(Text.literal("• Sven Packmaster").formatted(Formatting.GRAY)))
+                    .option(LabelOption.create(Text.literal("• Inferno Demonlord").formatted(Formatting.GOLD)))
+                    .option(LabelOption.create(Text.literal("• Riftstalker Bloodfiend").formatted(Formatting.DARK_RED)))
                     .build())
                 .build())
             .category(ConfigCategory.createBuilder()
@@ -123,7 +182,7 @@ public class SREGui {
                 .group(OptionGroup.createBuilder()
                     .name(Text.literal("About"))
                     .collapsed(false)
-                    .option(LabelOption.create(Text.literal("Skyblock Render Enhanced v1.0.1").formatted(Formatting.GOLD)))
+                    .option(LabelOption.create(Text.literal("Skyblock Render Enhanced v1.0.3").formatted(Formatting.GOLD)))
                     .option(LabelOption.create(Text.literal("For Minecraft 1.21.10 with Fabric").formatted(Formatting.GRAY)))
                     .option(LabelOption.create(Text.literal("Created for Hypixel Skyblock players").formatted(Formatting.GRAY)))
                     .build())

@@ -10,6 +10,7 @@ import org.lwjgl.glfw.GLFW;
 public class Keybinds {
     public static KeyBinding toggleSre;
     public static KeyBinding openGui;
+    public static KeyBinding toggleSlayer;
     
     private static final KeyBinding.Category SRE_CATEGORY = KeyBinding.Category.create(Identifier.of("sre", "category"));
     
@@ -25,6 +26,13 @@ public class Keybinds {
             "key.sre.opengui",
             InputUtil.Type.KEYSYM,
             GLFW.GLFW_KEY_M,
+            SRE_CATEGORY
+        ));
+        
+        toggleSlayer = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+            "key.sre.toggleslayer",
+            InputUtil.Type.KEYSYM,
+            GLFW.GLFW_KEY_B,
             SRE_CATEGORY
         ));
         

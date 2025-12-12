@@ -11,6 +11,20 @@ import java.nio.file.Path;
 import java.util.*;
 
 public class ConfigHandler {
+    
+    public enum SlayerMode {
+        OFF,
+        HIDE,
+        GLOW;
+        
+        public String getDisplayName() {
+            return switch (this) {
+                case OFF -> "Off (Show All)";
+                case HIDE -> "Hide Others";
+                case GLOW -> "Highlight Mine";
+            };
+        }
+    }
     private static final Gson GSON = new GsonBuilder()
         .setPrettyPrinting()
         .registerTypeAdapter(ConfigData.class, new ConfigDataDeserializer())
@@ -24,6 +38,10 @@ public class ConfigHandler {
     public static boolean keybindsEnabled = true;
     public static boolean renderPartyMembers = true;
     public static List<String> playersToRender = new ArrayList<>();
+    
+    public static SlayerMode slayerMode = SlayerMode.OFF;
+    public static boolean linkSlayerToPlayer = false;
+    public static int glowColor = 0x00FF00;
     
     public static void load() {
         try {
@@ -61,6 +79,9 @@ public class ConfigHandler {
         keybindsEnabled = config.keybindsEnabled;
         renderPartyMembers = config.renderPartyMembers;
         playersToRender = new ArrayList<>(config.playersToRender);
+        slayerMode = config.slayerMode;
+        linkSlayerToPlayer = config.linkSlayerToPlayer;
+        glowColor = config.glowColor;
     }
     
     private static void syncFromFields() {
@@ -68,6 +89,9 @@ public class ConfigHandler {
         config.keybindsEnabled = keybindsEnabled;
         config.renderPartyMembers = renderPartyMembers;
         config.playersToRender = new ArrayList<>(playersToRender);
+        config.slayerMode = slayerMode;
+        config.linkSlayerToPlayer = linkSlayerToPlayer;
+        config.glowColor = glowColor;
     }
     
     public static void syncAndSave() {
@@ -101,6 +125,9 @@ public class ConfigHandler {
         public boolean keybindsEnabled = true;
         public boolean renderPartyMembers = true;
         public List<String> playersToRender = new ArrayList<>();
+        public SlayerMode slayerMode = SlayerMode.OFF;
+        public boolean linkSlayerToPlayer = false;
+        public int glowColor = 0x00FF00;
     }
     
     private static class ConfigDataDeserializer implements JsonDeserializer<ConfigData> {
@@ -122,6 +149,19 @@ public class ConfigHandler {
             }
             if (obj.has("renderPartyMembers")) {
                 data.renderPartyMembers = obj.get("renderPartyMembers").getAsBoolean();
+            }
+            if (obj.has("slayerMode")) {
+                try {
+                    data.slayerMode = SlayerMode.valueOf(obj.get("slayerMode").getAsString());
+                } catch (Exception e) {
+                    data.slayerMode = SlayerMode.OFF;
+                }
+            }
+            if (obj.has("linkSlayerToPlayer")) {
+                data.linkSlayerToPlayer = obj.get("linkSlayerToPlayer").getAsBoolean();
+            }
+            if (obj.has("glowColor")) {
+                data.glowColor = obj.get("glowColor").getAsInt();
             }
             
             Set<String> allPlayers = new LinkedHashSet<>();

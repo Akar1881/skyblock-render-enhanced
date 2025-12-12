@@ -52,25 +52,55 @@ public class SRECommand {
                 }))
             .then(ClientCommandManager.literal("toggle")
                 .executes(context -> {
-                    ConfigHandler.renderPlayers = !ConfigHandler.renderPlayers;
-                    ConfigHandler.syncAndSave();
-                    if (ConfigHandler.renderPlayers) {
-                        context.getSource().sendFeedback(Text.literal("[SRE] ")
-                            .formatted(Formatting.GREEN)
-                            .append(Text.literal("Rendering players is now ")
-                                .formatted(Formatting.GREEN))
-                            .append(Text.literal("on")
-                                .formatted(Formatting.BOLD, Formatting.GREEN)));
-                    } else {
-                        context.getSource().sendFeedback(Text.literal("[SRE] ")
-                            .formatted(Formatting.GREEN)
-                            .append(Text.literal("Rendering players is now ")
-                                .formatted(Formatting.RED))
-                            .append(Text.literal("off")
-                                .formatted(Formatting.BOLD, Formatting.RED)));
-                    }
+                    context.getSource().sendFeedback(Text.literal("[SRE] ")
+                        .formatted(Formatting.GREEN)
+                        .append(Text.literal("Usage: /sre toggle player OR /sre toggle slayer")
+                            .formatted(Formatting.YELLOW)));
                     return 1;
-                }))
+                })
+                .then(ClientCommandManager.literal("player")
+                    .executes(context -> {
+                        ConfigHandler.renderPlayers = !ConfigHandler.renderPlayers;
+                        ConfigHandler.syncAndSave();
+                        if (ConfigHandler.renderPlayers) {
+                            context.getSource().sendFeedback(Text.literal("[SRE] ")
+                                .formatted(Formatting.GREEN)
+                                .append(Text.literal("Rendering players is now ")
+                                    .formatted(Formatting.GREEN))
+                                .append(Text.literal("on")
+                                    .formatted(Formatting.BOLD, Formatting.GREEN)));
+                        } else {
+                            context.getSource().sendFeedback(Text.literal("[SRE] ")
+                                .formatted(Formatting.GREEN)
+                                .append(Text.literal("Rendering players is now ")
+                                    .formatted(Formatting.RED))
+                                .append(Text.literal("off")
+                                    .formatted(Formatting.BOLD, Formatting.RED)));
+                        }
+                        return 1;
+                    }))
+                .then(ClientCommandManager.literal("slayer")
+                    .executes(context -> {
+                        ConfigHandler.SlayerMode[] modes = ConfigHandler.SlayerMode.values();
+                        int currentIndex = ConfigHandler.slayerMode.ordinal();
+                        int nextIndex = (currentIndex + 1) % modes.length;
+                        ConfigHandler.slayerMode = modes[nextIndex];
+                        ConfigHandler.syncAndSave();
+                        
+                        Formatting color = switch (ConfigHandler.slayerMode) {
+                            case OFF -> Formatting.GRAY;
+                            case HIDE -> Formatting.RED;
+                            case GLOW -> Formatting.GREEN;
+                        };
+                        
+                        context.getSource().sendFeedback(Text.literal("[SRE] ")
+                            .formatted(Formatting.GREEN)
+                            .append(Text.literal("Slayer mode: ")
+                                .formatted(Formatting.WHITE))
+                            .append(Text.literal(ConfigHandler.slayerMode.getDisplayName())
+                                .formatted(Formatting.BOLD, color)));
+                        return 1;
+                    })))
             .then(ClientCommandManager.literal("whitelist")
                 .then(ClientCommandManager.literal("add")
                     .then(ClientCommandManager.argument("player", StringArgumentType.word())
@@ -119,7 +149,11 @@ public class SRECommand {
                 .formatted(Formatting.BLUE))
             .append(Text.literal("+ ")
                 .formatted(Formatting.RED))
-            .append(Text.literal("/sre toggle - Toggle mod on/off\n")
+            .append(Text.literal("/sre toggle player - Toggle player render\n")
+                .formatted(Formatting.BLUE))
+            .append(Text.literal("+ ")
+                .formatted(Formatting.RED))
+            .append(Text.literal("/sre toggle slayer - Cycle slayer mode (Off/Hide/Glow)\n")
                 .formatted(Formatting.BLUE))
             .append(Text.literal("+ ")
                 .formatted(Formatting.RED))

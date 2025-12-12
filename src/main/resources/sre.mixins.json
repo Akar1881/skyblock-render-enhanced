@@ -4,7 +4,9 @@
     "package": "me.akar1881.sre.mixin",
     "compatibilityLevel": "JAVA_21",
     "client": [
-        "PlayerEntityRendererMixin"
+        "PlayerEntityRendererMixin",
+        "LivingEntityRendererMixin",
+        "EntityMixin"
     ],
     "injectors": {
         "defaultRequire": 1

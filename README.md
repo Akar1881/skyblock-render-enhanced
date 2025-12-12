@@ -32,6 +32,23 @@ Clean and simple settings menu powered by YACL (Yet Another Config Lib).
 
 ![Config GUI](pictures/configgui.png)
 
+### Slayer Config GUI
+
+![Slayer Config GUI](pictures/configslayergui.png)
+
+### Slayer Normal Mode
+
+![Slayer Normal](pictures/slayernormalmode.png)
+
+### Slayer Highlight Mode
+
+![Slayer Highlighted](pictures/slayerhighlightmode.png)
+
+### Slayer Hide Mode
+
+![Slayer Hidden](pictures/slayerhidemode.png)
+
+
 ---
 
 ## Features
@@ -41,6 +58,20 @@ Hide all players except those you've added to your allowlist.
 
 ### Whitelist System  
 Keep specific players **always visible**, even when hiding everyone else.
+
+### Slayer Boss Management
+Control visibility of slayer bosses with multiple modes:
+- **Off**: Show all slayer bosses (feature disabled)
+- **Hide**: Hide other players' slayer bosses, show yours and party/whitelisted players' bosses
+- **Glow**: Highlight your, party members', and whitelisted players' slayer bosses with a glow effect
+
+Supported Slayer Bosses:
+- Voidgloom Seraph
+- Revenant Horror
+- Tarantula Broodfather
+- Sven Packmaster
+- Inferno Demonlord
+- Riftstalker Bloodfiend
 
 ### Beautiful Config GUI (YACL)  
 All settings can be controlled from a clean configuration menu powered by YACL.
@@ -55,7 +86,7 @@ Quickly toggle the renderer or open the GUI without typing commands.
 NPCs remain visible, so nothing important disappears.
 
 ### Party Member Support  
-Automatically render Hypixel party members - perfect for Diana events!
+Automatically render Hypixel party members - perfect for Diana events and slayer parties!
 
 ### Lightweight & Skyblock-Friendly  
 Runs smoothly even in the busiest lobbies.
@@ -88,7 +119,8 @@ Runs smoothly even in the busiest lobbies.
 |--------|-------------|
 | `/sre` | Open the config GUI |
 | `/sre help` | Show list of commands |
-| `/sre toggle` | Toggle the mod on/off |
+| `/sre toggle player` | Toggle player rendering on/off |
+| `/sre toggle slayer` | Cycle slayer mode (Off/Hide/Glow) |
 | `/sre whitelist add <player>` | Add player to whitelist |
 | `/sre whitelist remove <player>` | Remove player from whitelist |
 
@@ -101,7 +133,8 @@ Runs smoothly even in the busiest lobbies.
 | Key | Action |
 |-----|--------|
 | `M` | Open SRE config GUI |
-| `V` | Toggle mod on/off |
+| `V` | Toggle player rendering on/off |
+| `B` | Cycle slayer mode |
 
 ---
 

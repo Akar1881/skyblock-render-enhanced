@@ -4,6 +4,7 @@ import me.akar1881.sre.config.ConfigHandler;
 import me.akar1881.sre.gui.SREGui;
 import me.akar1881.sre.keybinds.Keybinds;
 import me.akar1881.sre.party.PartyHandler;
+import me.akar1881.sre.slayer.SlayerHandler;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
@@ -25,9 +26,20 @@ public class SREEventHandler {
                 }
             }
             
+            SlayerHandler.tick();
+            
             if (ConfigHandler.keybindsEnabled) {
                 while (Keybinds.toggleSre.wasPressed()) {
                     ConfigHandler.renderPlayers = !ConfigHandler.renderPlayers;
+                    
+                    if (ConfigHandler.linkSlayerToPlayer) {
+                        if (ConfigHandler.renderPlayers) {
+                            ConfigHandler.slayerMode = ConfigHandler.SlayerMode.OFF;
+                        } else {
+                            ConfigHandler.slayerMode = ConfigHandler.SlayerMode.HIDE;
+                        }
+                    }
+                    
                     ConfigHandler.syncAndSave();
                     
                     if (ConfigHandler.renderPlayers) {
@@ -45,6 +57,37 @@ public class SREEventHandler {
                             .append(Text.literal("off")
                                 .formatted(Formatting.BOLD, Formatting.RED)), false);
                     }
+                    
+                    if (ConfigHandler.linkSlayerToPlayer) {
+                        Formatting color = ConfigHandler.slayerMode == ConfigHandler.SlayerMode.OFF ? Formatting.GRAY : Formatting.RED;
+                        client.player.sendMessage(Text.literal("[SRE] ")
+                            .formatted(Formatting.GREEN)
+                            .append(Text.literal("Slayer mode also set to: ")
+                                .formatted(Formatting.GRAY))
+                            .append(Text.literal(ConfigHandler.slayerMode.getDisplayName())
+                                .formatted(color, Formatting.BOLD)), false);
+                    }
+                }
+                
+                while (Keybinds.toggleSlayer.wasPressed()) {
+                    ConfigHandler.SlayerMode[] modes = ConfigHandler.SlayerMode.values();
+                    int currentIndex = ConfigHandler.slayerMode.ordinal();
+                    int nextIndex = (currentIndex + 1) % modes.length;
+                    ConfigHandler.slayerMode = modes[nextIndex];
+                    ConfigHandler.syncAndSave();
+                    
+                    Formatting color = switch (ConfigHandler.slayerMode) {
+                        case OFF -> Formatting.GRAY;
+                        case HIDE -> Formatting.RED;
+                        case GLOW -> Formatting.GREEN;
+                    };
+                    
+                    client.player.sendMessage(Text.literal("[SRE] ")
+                        .formatted(Formatting.GREEN)
+                        .append(Text.literal("Slayer mode: ")
+                            .formatted(Formatting.WHITE))
+                        .append(Text.literal(ConfigHandler.slayerMode.getDisplayName())
+                            .formatted(Formatting.BOLD, color)), false);
                 }
                 
                 while (Keybinds.openGui.wasPressed()) {
@@ -53,6 +96,7 @@ public class SREEventHandler {
             } else {
                 Keybinds.toggleSre.wasPressed();
                 Keybinds.openGui.wasPressed();
+                Keybinds.toggleSlayer.wasPressed();
             }
         });
     }
