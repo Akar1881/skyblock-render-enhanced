@@ -6,7 +6,10 @@ import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import me.akar1881.sre.config.ConfigHandler;
 import me.akar1881.sre.config.ConfigHandler.SlayerMode;
+import me.akar1881.sre.config.ConfigHandler.CounterMode;
+import me.akar1881.sre.counter.PartySlayerCounter;
 import me.akar1881.sre.keybinds.Keybinds;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -27,7 +30,7 @@ public class SREGui {
             Keybinds.toggleSlayer.getBoundKeyLocalizedText().getString() : "B";
 
         return YetAnotherConfigLib.createBuilder()
-            .title(Text.literal("Skyblock Render Enhanced v1.0.3"))
+            .title(Text.literal("Skyblock Render Enhanced v1.0.4"))
             .category(ConfigCategory.createBuilder()
                 .name(Text.literal("General"))
                 .tooltip(Text.literal("General settings for SRE"))
@@ -138,6 +141,95 @@ public class SREGui {
                     .build())
                 .build())
             .category(ConfigCategory.createBuilder()
+                .name(Text.literal("Party Counter"))
+                .tooltip(Text.literal("Track slayer boss kills for party members"))
+                .option(Option.<Boolean>createBuilder()
+                    .name(Text.literal("Enable Party Slayer Counter"))
+                    .description(OptionDescription.of(Text.literal(
+                        "When enabled, tracks how many slayer bosses you've killed for party members.\n" +
+                        "Perfect for slayer carries - count exactly how many bosses you did!\n" +
+                        "Data is saved to cache and cleared when party disbands.")))
+                    .binding(
+                        false,
+                        () -> ConfigHandler.counterEnabled,
+                        newValue -> {
+                            ConfigHandler.counterEnabled = newValue;
+                            ConfigHandler.syncAndSave();
+                        })
+                    .controller(opt -> BooleanControllerBuilder.create(opt)
+                        .formatValue(val -> val ? Text.literal("ON").formatted(Formatting.GREEN) : Text.literal("OFF").formatted(Formatting.RED))
+                        .coloured(true))
+                    .build())
+                .option(Option.<CounterMode>createBuilder()
+                    .name(Text.literal("Counter Mode"))
+                    .description(OptionDescription.of(Text.literal(
+                        "AUTO: Automatically counts kills + allows manual adjustments\n" +
+                        "MANUAL: Only count manually with commands\n\n" +
+                        "Use /sre counter add <player> to add kills\n" +
+                        "Use /sre counter remove <player> to subtract kills")))
+                    .binding(
+                        CounterMode.AUTO,
+                        () -> ConfigHandler.counterMode,
+                        newValue -> {
+                            ConfigHandler.counterMode = newValue;
+                            ConfigHandler.syncAndSave();
+                        })
+                    .controller(opt -> EnumControllerBuilder.create(opt)
+                        .enumClass(CounterMode.class)
+                        .formatValue(mode -> Text.literal(mode.getDisplayName()).formatted(
+                            mode == CounterMode.AUTO ? Formatting.GREEN : Formatting.YELLOW)))
+                    .build())
+                .option(Option.<Boolean>createBuilder()
+                    .name(Text.literal("Show Counter Widget"))
+                    .description(OptionDescription.of(Text.literal(
+                        "Display a widget on screen showing party member kill counts.\n" +
+                        "Use /sre widget to customize the widget position.")))
+                    .binding(
+                        true,
+                        () -> ConfigHandler.counterWidgetEnabled,
+                        newValue -> {
+                            ConfigHandler.counterWidgetEnabled = newValue;
+                            ConfigHandler.syncAndSave();
+                        })
+                    .controller(opt -> BooleanControllerBuilder.create(opt)
+                        .formatValue(val -> val ? Text.literal("YES").formatted(Formatting.GREEN) : Text.literal("NO").formatted(Formatting.RED))
+                        .coloured(true))
+                    .build())
+                .option(ButtonOption.createBuilder()
+                    .name(Text.literal("Edit Widget Position"))
+                    .description(OptionDescription.of(Text.literal("Open widget position editor to drag and place the counter widget anywhere on screen.")))
+                    .action((screen, button) -> {
+                        MinecraftClient.getInstance().setScreen(new WidgetPositionGui(screen));
+                    })
+                    .build())
+                .option(ButtonOption.createBuilder()
+                    .name(Text.literal("Clear Counter Data"))
+                    .description(OptionDescription.of(Text.literal("Reset all kill count data for party members.")))
+                    .action((screen, button) -> {
+                        PartySlayerCounter.clearCounter();
+                    })
+                    .build())
+                .group(OptionGroup.createBuilder()
+                    .name(Text.literal("Commands"))
+                    .collapsed(false)
+                    .option(LabelOption.create(Text.literal("/sre counter - View kill counts").formatted(Formatting.YELLOW)))
+                    .option(LabelOption.create(Text.literal("/sre counter mode - Toggle auto/manual").formatted(Formatting.YELLOW)))
+                    .option(LabelOption.create(Text.literal("/sre counter add <player> - Add +1 kill").formatted(Formatting.YELLOW)))
+                    .option(LabelOption.create(Text.literal("/sre counter remove <player> - Remove -1 kill").formatted(Formatting.YELLOW)))
+                    .option(LabelOption.create(Text.literal("/sre counter clear - Clear all data").formatted(Formatting.YELLOW)))
+                    .option(LabelOption.create(Text.literal("/sre widget - Edit widget position").formatted(Formatting.YELLOW)))
+                    .build())
+                .group(OptionGroup.createBuilder()
+                    .name(Text.literal("How It Works"))
+                    .collapsed(false)
+                    .option(LabelOption.create(Text.literal("1. Enable the counter and join a party").formatted(Formatting.WHITE)))
+                    .option(LabelOption.create(Text.literal("2. When party members spawn slayer bosses,").formatted(Formatting.WHITE)))
+                    .option(LabelOption.create(Text.literal("   and YOU kill them, it gets counted").formatted(Formatting.WHITE)))
+                    .option(LabelOption.create(Text.literal("3. View counts with /sre counter or widget").formatted(Formatting.WHITE)))
+                    .option(LabelOption.create(Text.literal("4. Data clears when party disbands").formatted(Formatting.WHITE)))
+                    .build())
+                .build())
+            .category(ConfigCategory.createBuilder()
                 .name(Text.literal("Player Whitelist"))
                 .tooltip(Text.literal("Manage which players are always visible"))
                 .group(ListOption.<String>createBuilder()
@@ -177,12 +269,14 @@ public class SREGui {
                     .collapsed(false)
                     .option(LabelOption.create(Text.literal("/sre - Open this config screen").formatted(Formatting.YELLOW)))
                     .option(LabelOption.create(Text.literal("/sre toggle - Toggle mod on/off").formatted(Formatting.YELLOW)))
+                    .option(LabelOption.create(Text.literal("/sre counter - View party kill counts").formatted(Formatting.YELLOW)))
+                    .option(LabelOption.create(Text.literal("/sre widget - Edit widget position").formatted(Formatting.YELLOW)))
                     .option(LabelOption.create(Text.literal("/sre help - Show all commands").formatted(Formatting.YELLOW)))
                     .build())
                 .group(OptionGroup.createBuilder()
                     .name(Text.literal("About"))
                     .collapsed(false)
-                    .option(LabelOption.create(Text.literal("Skyblock Render Enhanced v1.0.3").formatted(Formatting.GOLD)))
+                    .option(LabelOption.create(Text.literal("Skyblock Render Enhanced v1.0.4").formatted(Formatting.GOLD)))
                     .option(LabelOption.create(Text.literal("For Minecraft 1.21.10 with Fabric").formatted(Formatting.GRAY)))
                     .option(LabelOption.create(Text.literal("Created for Hypixel Skyblock players").formatted(Formatting.GRAY)))
                     .build())

@@ -25,6 +25,18 @@ public class ConfigHandler {
             };
         }
     }
+    
+    public enum CounterMode {
+        AUTO,
+        MANUAL;
+        
+        public String getDisplayName() {
+            return switch (this) {
+                case AUTO -> "Auto (with manual adjust)";
+                case MANUAL -> "Manual Only";
+            };
+        }
+    }
     private static final Gson GSON = new GsonBuilder()
         .setPrettyPrinting()
         .registerTypeAdapter(ConfigData.class, new ConfigDataDeserializer())
@@ -42,6 +54,12 @@ public class ConfigHandler {
     public static SlayerMode slayerMode = SlayerMode.OFF;
     public static boolean linkSlayerToPlayer = false;
     public static int glowColor = 0x00FF00;
+    
+    public static boolean counterEnabled = false;
+    public static boolean counterWidgetEnabled = true;
+    public static float counterWidgetX = 0.01f;
+    public static float counterWidgetY = 0.3f;
+    public static CounterMode counterMode = CounterMode.AUTO;
     
     public static void load() {
         try {
@@ -82,6 +100,11 @@ public class ConfigHandler {
         slayerMode = config.slayerMode;
         linkSlayerToPlayer = config.linkSlayerToPlayer;
         glowColor = config.glowColor;
+        counterEnabled = config.counterEnabled;
+        counterWidgetEnabled = config.counterWidgetEnabled;
+        counterWidgetX = config.counterWidgetX;
+        counterWidgetY = config.counterWidgetY;
+        counterMode = config.counterMode;
     }
     
     private static void syncFromFields() {
@@ -92,6 +115,11 @@ public class ConfigHandler {
         config.slayerMode = slayerMode;
         config.linkSlayerToPlayer = linkSlayerToPlayer;
         config.glowColor = glowColor;
+        config.counterEnabled = counterEnabled;
+        config.counterWidgetEnabled = counterWidgetEnabled;
+        config.counterWidgetX = counterWidgetX;
+        config.counterWidgetY = counterWidgetY;
+        config.counterMode = counterMode;
     }
     
     public static void syncAndSave() {
@@ -128,6 +156,11 @@ public class ConfigHandler {
         public SlayerMode slayerMode = SlayerMode.OFF;
         public boolean linkSlayerToPlayer = false;
         public int glowColor = 0x00FF00;
+        public boolean counterEnabled = false;
+        public boolean counterWidgetEnabled = true;
+        public float counterWidgetX = 0.01f;
+        public float counterWidgetY = 0.3f;
+        public CounterMode counterMode = CounterMode.AUTO;
     }
     
     private static class ConfigDataDeserializer implements JsonDeserializer<ConfigData> {
@@ -162,6 +195,25 @@ public class ConfigHandler {
             }
             if (obj.has("glowColor")) {
                 data.glowColor = obj.get("glowColor").getAsInt();
+            }
+            if (obj.has("counterEnabled")) {
+                data.counterEnabled = obj.get("counterEnabled").getAsBoolean();
+            }
+            if (obj.has("counterWidgetEnabled")) {
+                data.counterWidgetEnabled = obj.get("counterWidgetEnabled").getAsBoolean();
+            }
+            if (obj.has("counterWidgetX")) {
+                data.counterWidgetX = obj.get("counterWidgetX").getAsFloat();
+            }
+            if (obj.has("counterWidgetY")) {
+                data.counterWidgetY = obj.get("counterWidgetY").getAsFloat();
+            }
+            if (obj.has("counterMode")) {
+                try {
+                    data.counterMode = CounterMode.valueOf(obj.get("counterMode").getAsString());
+                } catch (Exception e) {
+                    data.counterMode = CounterMode.AUTO;
+                }
             }
             
             Set<String> allPlayers = new LinkedHashSet<>();

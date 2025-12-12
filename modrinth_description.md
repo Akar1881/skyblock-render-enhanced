@@ -26,6 +26,29 @@ Supported Slayer Bosses:
 - Inferno Demonlord
 - Riftstalker Bloodfiend
 
+### Party Slayer Counter (NEW in v1.0.4)
+Track how many slayer bosses you've killed for party members - perfect for slayer carries!
+
+**Two Counting Modes:**
+- **Auto Mode**: Automatically detects and counts kills via "LOOT SHARE" messages + allows manual adjustments
+- **Manual Mode**: You count everything yourself using commands
+
+**How it works:**
+- Enable the counter in settings or with `/sre toggle counter`
+- Choose your mode: Auto or Manual (via GUI or `/sre counter mode`)
+- In Auto mode: kills are counted automatically when you help kill party members' bosses
+- Use `/sre counter add <player>` to manually add kills
+- Use `/sre counter remove <player>` to subtract kills (fix mistakes!)
+- View counts with `/sre counter` command or the on-screen widget
+- Widget position is fully customizable - drag it anywhere with `/sre widget`
+- Data is saved to cache and automatically clears when party disbands
+
+**Why you need this:**
+- Perfect for slayer carries where you kill bosses for paying customers
+- Track exactly how many bosses you've done for each party member
+- Manual adjustment for when auto-detection misses or double-counts
+- Never lose count even after hundreds of boss kills!
+
 ### Config GUI (YACL)
 All settings can be adjusted through a clean configuration menu powered by YACL.
 
@@ -51,6 +74,13 @@ Designed to run smoothly in busy Skyblock environments with optimized caching an
 | `/sre help` | Show list of commands |
 | `/sre toggle player` | Toggle player rendering on or off |
 | `/sre toggle slayer` | Cycle slayer mode (Off/Hide/Glow) |
+| `/sre toggle counter` | Toggle party slayer counter on or off |
+| `/sre counter` | Show party slayer kill counts |
+| `/sre counter mode` | Toggle between Auto and Manual mode |
+| `/sre counter add <player>` | Add +1 kill for a player |
+| `/sre counter remove <player>` | Remove -1 kill for a player |
+| `/sre counter clear` | Clear counter data |
+| `/sre widget` | Open widget position editor |
 | `/sre whitelist add <player>` | Add a player to the whitelist |
 | `/sre whitelist remove <player>` | Remove a player from the whitelist |
 

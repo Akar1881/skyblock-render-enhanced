@@ -5,5 +5,7 @@
     "key.categories.sre": "Skyblock Render Enhanced",
     "gui.sre.title": "Skyblock Render Enhanced",
     "gui.sre.renderPlayers": "Render Players",
-    "gui.sre.description.renderplayers": "Toggle whether to show only selected players or all players."
+    "gui.sre.description.renderplayers": "Toggle whether to show only selected players or all players.",
+    "gui.sre.counter.title": "Party Slayer Counter",
+    "gui.sre.counter.description": "Track slayer boss kills for party members"
 }

@@ -1,11 +1,14 @@
 package me.akar1881.sre.events;
 
 import me.akar1881.sre.config.ConfigHandler;
+import me.akar1881.sre.counter.PartyCounterWidget;
+import me.akar1881.sre.counter.SlayerKillDetector;
 import me.akar1881.sre.gui.SREGui;
 import me.akar1881.sre.keybinds.Keybinds;
 import me.akar1881.sre.party.PartyHandler;
 import me.akar1881.sre.slayer.SlayerHandler;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -13,6 +16,9 @@ import net.minecraft.util.Formatting;
 public class SREEventHandler {
     private static int tickCounter = 0;
     private static final int PARTY_UPDATE_INTERVAL = 200;
+    
+    private static int counterTickCounter = 0;
+    private static final int COUNTER_SCAN_INTERVAL = 10;
     
     public static void register() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -27,6 +33,12 @@ public class SREEventHandler {
             }
             
             SlayerHandler.tick();
+            
+            counterTickCounter++;
+            if (counterTickCounter >= COUNTER_SCAN_INTERVAL) {
+                counterTickCounter = 0;
+                SlayerKillDetector.tick();
+            }
             
             if (ConfigHandler.keybindsEnabled) {
                 while (Keybinds.toggleSre.wasPressed()) {
@@ -97,6 +109,13 @@ public class SREEventHandler {
                 Keybinds.toggleSre.wasPressed();
                 Keybinds.openGui.wasPressed();
                 Keybinds.toggleSlayer.wasPressed();
+            }
+        });
+        
+        HudRenderCallback.EVENT.register((context, tickDelta) -> {
+            MinecraftClient client = MinecraftClient.getInstance();
+            if (client.player != null && client.currentScreen == null) {
+                PartyCounterWidget.render(context);
             }
         });
     }

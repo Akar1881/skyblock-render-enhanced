@@ -8,4 +8,9 @@ public class SREConfig {
     public boolean renderPartyMembers = true;
     public boolean keybindsEnabled = true;
     public List<String> playersToRender = new ArrayList<>();
+    
+    public boolean counterEnabled = false;
+    public boolean counterWidgetEnabled = true;
+    public float counterWidgetX = 0.01f;
+    public float counterWidgetY = 0.3f;
 }

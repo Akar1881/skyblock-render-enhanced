@@ -48,6 +48,13 @@ Clean and simple settings menu powered by YACL (Yet Another Config Lib).
 
 ![Slayer Hidden](pictures/slayerhidemode.png)
 
+### Counter Widget
+
+![Counter Widget](pictures/counterwidget.png)
+
+### Counter Config GUI
+![Counter GUI](pictures/counterconfig.png)
+
 
 ---
 
@@ -72,6 +79,29 @@ Supported Slayer Bosses:
 - Sven Packmaster
 - Inferno Demonlord
 - Riftstalker Bloodfiend
+
+### Party Slayer Counter (NEW in v1.0.4)
+Track how many slayer bosses you've killed for party members - perfect for slayer carries!
+
+**Two Counting Modes:**
+- **Auto Mode**: Automatically detects and counts kills when you receive "LOOT SHARE" messages + allows manual adjustments
+- **Manual Mode**: You count everything yourself using commands
+
+**How it works:**
+1. Enable the counter in settings or with `/sre toggle counter`
+2. Choose your mode: Auto or Manual (via GUI or `/sre counter mode`)
+3. In Auto mode: kills are counted automatically when you help kill party members' bosses
+4. Use `/sre counter add <player>` to manually add kills
+5. Use `/sre counter remove <player>` to manually subtract kills (fix mistakes!)
+6. View counts with `/sre counter` command or the on-screen widget
+7. Widget position is fully customizable - drag it anywhere with `/sre widget`
+8. Data is saved to cache and automatically clears when party disbands
+
+**Why you need this:**
+- Perfect for slayer carries where you kill bosses for paying customers
+- Track exactly how many bosses you've done for each party member
+- Manual adjustment for when auto-detection misses or double-counts
+- Never lose count even after hundreds of boss kills!
 
 ### Beautiful Config GUI (YACL)  
 All settings can be controlled from a clean configuration menu powered by YACL.
@@ -121,6 +151,13 @@ Runs smoothly even in the busiest lobbies.
 | `/sre help` | Show list of commands |
 | `/sre toggle player` | Toggle player rendering on/off |
 | `/sre toggle slayer` | Cycle slayer mode (Off/Hide/Glow) |
+| `/sre toggle counter` | Toggle party slayer counter on/off |
+| `/sre counter` | Show party slayer kill counts |
+| `/sre counter mode` | Toggle between Auto and Manual mode |
+| `/sre counter add <player>` | Add +1 kill for a player |
+| `/sre counter remove <player>` | Remove -1 kill for a player |
+| `/sre counter clear` | Clear counter data |
+| `/sre widget` | Open widget position editor |
 | `/sre whitelist add <player>` | Add player to whitelist |
 | `/sre whitelist remove <player>` | Remove player from whitelist |
 
