@@ -30,7 +30,7 @@ public class SREGui {
             Keybinds.toggleSlayer.getBoundKeyLocalizedText().getString() : "B";
 
         return YetAnotherConfigLib.createBuilder()
-            .title(Text.literal("Skyblock Render Enhanced v1.0.4"))
+            .title(Text.literal("Skyblock Render Enhanced v1.0.5"))
             .category(ConfigCategory.createBuilder()
                 .name(Text.literal("General"))
                 .tooltip(Text.literal("General settings for SRE"))
@@ -221,7 +221,7 @@ public class SREGui {
                     .build())
                 .group(OptionGroup.createBuilder()
                     .name(Text.literal("How It Works"))
-                    .collapsed(false)
+                    .collapsed(true)
                     .option(LabelOption.create(Text.literal("1. Enable the counter and join a party").formatted(Formatting.WHITE)))
                     .option(LabelOption.create(Text.literal("2. When party members spawn slayer bosses,").formatted(Formatting.WHITE)))
                     .option(LabelOption.create(Text.literal("   and YOU kill them, it gets counted").formatted(Formatting.WHITE)))

@@ -1,6 +1,7 @@
 package me.akar1881.sre.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import me.akar1881.sre.config.ConfigHandler;
@@ -185,7 +186,37 @@ public class SRECommand {
                             .append(Text.literal("Party slayer counter has been cleared.")
                                 .formatted(Formatting.YELLOW)));
                         return 1;
-                    }))
+                    })
+                    .then(ClientCommandManager.argument("player", StringArgumentType.word())
+                        .suggests((context, builder) -> {
+                            Set<String> players = PartySlayerCounter.getTrackedPlayerNames();
+                            for (String player : players) {
+                                if (player.toLowerCase().startsWith(builder.getRemainingLowerCase())) {
+                                    builder.suggest(player);
+                                }
+                            }
+                            return builder.buildFuture();
+                        })
+                        .executes(context -> {
+                            String playerName = StringArgumentType.getString(context, "player");
+                            boolean removed = PartySlayerCounter.clearPlayerCounter(playerName);
+                            if (removed) {
+                                context.getSource().sendFeedback(Text.literal("[SRE] ")
+                                    .formatted(Formatting.GREEN)
+                                    .append(Text.literal("Cleared counter for ")
+                                        .formatted(Formatting.YELLOW))
+                                    .append(Text.literal(playerName)
+                                        .formatted(Formatting.WHITE, Formatting.BOLD)));
+                            } else {
+                                context.getSource().sendFeedback(Text.literal("[SRE] ")
+                                    .formatted(Formatting.GREEN)
+                                    .append(Text.literal("No counter data found for ")
+                                        .formatted(Formatting.RED))
+                                    .append(Text.literal(playerName)
+                                        .formatted(Formatting.WHITE)));
+                            }
+                            return 1;
+                        })))
                 .then(ClientCommandManager.literal("mode")
                     .executes(context -> {
                         ConfigHandler.CounterMode[] modes = ConfigHandler.CounterMode.values();
@@ -217,7 +248,22 @@ public class SRECommand {
                                 .append(Text.literal(" (total: " + newCount + ")")
                                     .formatted(Formatting.GRAY)));
                             return 1;
-                        })))
+                        })
+                        .then(ClientCommandManager.argument("amount", IntegerArgumentType.integer(1))
+                            .executes(context -> {
+                                String playerName = StringArgumentType.getString(context, "player");
+                                int amount = IntegerArgumentType.getInteger(context, "amount");
+                                int newCount = PartySlayerCounter.addKillCount(playerName, amount);
+                                context.getSource().sendFeedback(Text.literal("[SRE] ")
+                                    .formatted(Formatting.GREEN)
+                                    .append(Text.literal("+" + amount + " for ")
+                                        .formatted(Formatting.GREEN))
+                                    .append(Text.literal(playerName)
+                                        .formatted(Formatting.WHITE, Formatting.BOLD))
+                                    .append(Text.literal(" (total: " + newCount + ")")
+                                        .formatted(Formatting.GRAY)));
+                                return 1;
+                            }))))
                 .then(ClientCommandManager.literal("remove")
                     .then(ClientCommandManager.argument("player", StringArgumentType.word())
                         .suggests((context, builder) -> {
@@ -241,7 +287,22 @@ public class SRECommand {
                                 .append(Text.literal(" (total: " + newCount + ")")
                                     .formatted(Formatting.GRAY)));
                             return 1;
-                        }))))
+                        })
+                        .then(ClientCommandManager.argument("amount", IntegerArgumentType.integer(1))
+                            .executes(context -> {
+                                String playerName = StringArgumentType.getString(context, "player");
+                                int amount = IntegerArgumentType.getInteger(context, "amount");
+                                int newCount = PartySlayerCounter.removeKillCount(playerName, amount);
+                                context.getSource().sendFeedback(Text.literal("[SRE] ")
+                                    .formatted(Formatting.GREEN)
+                                    .append(Text.literal("-" + amount + " for ")
+                                        .formatted(Formatting.RED))
+                                    .append(Text.literal(playerName)
+                                        .formatted(Formatting.WHITE, Formatting.BOLD))
+                                    .append(Text.literal(" (total: " + newCount + ")")
+                                        .formatted(Formatting.GRAY)));
+                                return 1;
+                            })))))
             .then(ClientCommandManager.literal("widget")
                 .executes(context -> {
                     MinecraftClient.getInstance().send(() -> 
@@ -317,15 +378,15 @@ public class SRECommand {
                 .formatted(Formatting.BLUE))
             .append(Text.literal("+ ")
                 .formatted(Formatting.RED))
-            .append(Text.literal("/sre counter add <player> - Add +1 kill\n")
+            .append(Text.literal("/sre counter add <player> [amount] - Add kills\n")
                 .formatted(Formatting.BLUE))
             .append(Text.literal("+ ")
                 .formatted(Formatting.RED))
-            .append(Text.literal("/sre counter remove <player> - Remove -1 kill\n")
+            .append(Text.literal("/sre counter remove <player> [amount] - Remove kills\n")
                 .formatted(Formatting.BLUE))
             .append(Text.literal("+ ")
                 .formatted(Formatting.RED))
-            .append(Text.literal("/sre counter clear - Clear counter data\n")
+            .append(Text.literal("/sre counter clear [player] - Clear counter data\n")
                 .formatted(Formatting.BLUE))
             .append(Text.literal("+ ")
                 .formatted(Formatting.RED))

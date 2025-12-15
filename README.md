@@ -48,13 +48,6 @@ Clean and simple settings menu powered by YACL (Yet Another Config Lib).
 
 ![Slayer Hidden](pictures/slayerhidemode.png)
 
-### Counter Widget
-
-![Counter Widget](pictures/counterwidget.png)
-
-### Counter Config GUI
-![Counter GUI](pictures/counterconfig.png)
-
 
 ---
 
@@ -80,7 +73,7 @@ Supported Slayer Bosses:
 - Inferno Demonlord
 - Riftstalker Bloodfiend
 
-### Party Slayer Counter (NEW in v1.0.4)
+### Party Slayer Counter 
 Track how many slayer bosses you've killed for party members - perfect for slayer carries!
 
 **Two Counting Modes:**
@@ -154,9 +147,9 @@ Runs smoothly even in the busiest lobbies.
 | `/sre toggle counter` | Toggle party slayer counter on/off |
 | `/sre counter` | Show party slayer kill counts |
 | `/sre counter mode` | Toggle between Auto and Manual mode |
-| `/sre counter add <player>` | Add +1 kill for a player |
-| `/sre counter remove <player>` | Remove -1 kill for a player |
-| `/sre counter clear` | Clear counter data |
+| `/sre counter add <player> [amount]` | Add kills for a player (default: 1) |
+| `/sre counter remove <player> [amount]` | Remove kills for a player (default: 1) |
+| `/sre counter clear [player]` | Clear all counter data, or specific player |
 | `/sre widget` | Open widget position editor |
 | `/sre whitelist add <player>` | Add player to whitelist |
 | `/sre whitelist remove <player>` | Remove player from whitelist |

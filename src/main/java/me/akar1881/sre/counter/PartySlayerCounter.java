@@ -168,6 +168,22 @@ public class PartySlayerCounter {
         saveCache();
     }
     
+    public static boolean clearPlayerCounter(String playerName) {
+        if (partyKillCounts.containsKey(playerName)) {
+            partyKillCounts.remove(playerName);
+            saveCache();
+            return true;
+        }
+        for (String key : partyKillCounts.keySet()) {
+            if (key.equalsIgnoreCase(playerName)) {
+                partyKillCounts.remove(key);
+                saveCache();
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public static void setKillCount(String playerName, int count) {
         if (count <= 0) {
             partyKillCounts.remove(playerName);
@@ -178,25 +194,37 @@ public class PartySlayerCounter {
     }
     
     public static int incrementKillCount(String playerName) {
-        int newCount = partyKillCounts.merge(playerName, 1, Integer::sum);
+        return addKillCount(playerName, 1);
+    }
+    
+    public static int addKillCount(String playerName, int amount) {
+        if (amount <= 0) {
+            return partyKillCounts.getOrDefault(playerName, 0);
+        }
+        int newCount = partyKillCounts.merge(playerName, amount, Integer::sum);
         saveCache();
-        SkyblockRenderEnhanced.LOGGER.info("Manually incremented count for {}, new total: {}", playerName, newCount);
+        SkyblockRenderEnhanced.LOGGER.info("Added {} kills for {}, new total: {}", amount, playerName, newCount);
         return newCount;
     }
     
     public static int decrementKillCount(String playerName) {
+        return removeKillCount(playerName, 1);
+    }
+    
+    public static int removeKillCount(String playerName, int amount) {
         Integer current = partyKillCounts.get(playerName);
-        if (current == null || current <= 0) {
-            return 0;
+        if (current == null || current <= 0 || amount <= 0) {
+            return current != null ? current : 0;
         }
-        int newCount = current - 1;
+        int newCount = current - amount;
         if (newCount <= 0) {
             partyKillCounts.remove(playerName);
+            newCount = 0;
         } else {
             partyKillCounts.put(playerName, newCount);
         }
         saveCache();
-        SkyblockRenderEnhanced.LOGGER.info("Manually decremented count for {}, new total: {}", playerName, newCount);
+        SkyblockRenderEnhanced.LOGGER.info("Removed {} kills for {}, new total: {}", amount, playerName, newCount);
         return newCount;
     }
     
