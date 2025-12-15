@@ -276,7 +276,7 @@ public class SREGui {
                 .group(OptionGroup.createBuilder()
                     .name(Text.literal("About"))
                     .collapsed(false)
-                    .option(LabelOption.create(Text.literal("Skyblock Render Enhanced v1.0.4").formatted(Formatting.GOLD)))
+                    .option(LabelOption.create(Text.literal("Skyblock Render Enhanced v1.0.5").formatted(Formatting.GOLD)))
                     .option(LabelOption.create(Text.literal("For Minecraft 1.21.10 with Fabric").formatted(Formatting.GRAY)))
                     .option(LabelOption.create(Text.literal("Created for Hypixel Skyblock players").formatted(Formatting.GRAY)))
                     .build())
