@@ -61,6 +61,9 @@ public class ConfigHandler {
     public static float counterWidgetY = 0.3f;
     public static CounterMode counterMode = CounterMode.AUTO;
     
+    public static boolean enchantmentHelperEnabled = true;
+    public static boolean noHurtCam = false;
+    
     public static void load() {
         try {
             if (Files.exists(CONFIG_PATH)) {
@@ -105,6 +108,8 @@ public class ConfigHandler {
         counterWidgetX = config.counterWidgetX;
         counterWidgetY = config.counterWidgetY;
         counterMode = config.counterMode;
+        enchantmentHelperEnabled = config.enchantmentHelperEnabled;
+        noHurtCam = config.noHurtCam;
     }
     
     private static void syncFromFields() {
@@ -120,6 +125,8 @@ public class ConfigHandler {
         config.counterWidgetX = counterWidgetX;
         config.counterWidgetY = counterWidgetY;
         config.counterMode = counterMode;
+        config.enchantmentHelperEnabled = enchantmentHelperEnabled;
+        config.noHurtCam = noHurtCam;
     }
     
     public static void syncAndSave() {
@@ -161,6 +168,8 @@ public class ConfigHandler {
         public float counterWidgetX = 0.01f;
         public float counterWidgetY = 0.3f;
         public CounterMode counterMode = CounterMode.AUTO;
+        public boolean enchantmentHelperEnabled = true;
+        public boolean noHurtCam = false;
     }
     
     private static class ConfigDataDeserializer implements JsonDeserializer<ConfigData> {
@@ -214,6 +223,12 @@ public class ConfigHandler {
                 } catch (Exception e) {
                     data.counterMode = CounterMode.AUTO;
                 }
+            }
+            if (obj.has("enchantmentHelperEnabled")) {
+                data.enchantmentHelperEnabled = obj.get("enchantmentHelperEnabled").getAsBoolean();
+            }
+            if (obj.has("noHurtCam")) {
+                data.noHurtCam = obj.get("noHurtCam").getAsBoolean();
             }
             
             Set<String> allPlayers = new LinkedHashSet<>();

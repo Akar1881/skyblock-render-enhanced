@@ -63,8 +63,8 @@ public class Utils {
         
         Collection<PlayerListEntry> players = networkHandler.getPlayerList();
         for (PlayerListEntry entry : players) {
-            if (entry.getProfile() != null && entry.getProfile().getName() != null) {
-                cachedTabPlayers.add(entry.getProfile().getName().toLowerCase());
+            if (entry.getProfile() != null && entry.getProfile().name() != null) {
+                cachedTabPlayers.add(entry.getProfile().name().toLowerCase());
             }
         }
     }

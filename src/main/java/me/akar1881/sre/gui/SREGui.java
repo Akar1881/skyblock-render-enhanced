@@ -8,6 +8,8 @@ import me.akar1881.sre.config.ConfigHandler;
 import me.akar1881.sre.config.ConfigHandler.SlayerMode;
 import me.akar1881.sre.config.ConfigHandler.CounterMode;
 import me.akar1881.sre.counter.PartySlayerCounter;
+import me.akar1881.sre.enchantment.EnchantmentData;
+import me.akar1881.sre.enchantment.EnchantmentData.EnchantmentInfo;
 import me.akar1881.sre.keybinds.Keybinds;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -15,6 +17,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class SREGui {
 
@@ -30,7 +33,7 @@ public class SREGui {
             Keybinds.toggleSlayer.getBoundKeyLocalizedText().getString() : "B";
 
         return YetAnotherConfigLib.createBuilder()
-            .title(Text.literal("Skyblock Render Enhanced v1.0.5"))
+            .title(Text.literal("Skyblock Render Enhanced v1.0.6"))
             .category(ConfigCategory.createBuilder()
                 .name(Text.literal("General"))
                 .tooltip(Text.literal("General settings for SRE"))
@@ -230,6 +233,55 @@ public class SREGui {
                     .build())
                 .build())
             .category(ConfigCategory.createBuilder()
+                .name(Text.literal("Enchantment Helper"))
+                .tooltip(Text.literal("View and manage enchantment information for swords and bows"))
+                .option(Option.<Boolean>createBuilder()
+                    .name(Text.literal("Enable Enchantment Helper"))
+                    .description(OptionDescription.of(Text.literal(
+                        "When enabled, you can use /sre missing to see what enchantments your held sword or bow is missing.")))
+                    .binding(
+                        true,
+                        () -> ConfigHandler.enchantmentHelperEnabled,
+                        newValue -> {
+                            ConfigHandler.enchantmentHelperEnabled = newValue;
+                            ConfigHandler.syncAndSave();
+                        })
+                    .controller(opt -> BooleanControllerBuilder.create(opt)
+                        .formatValue(val -> val ? Text.literal("ON").formatted(Formatting.GREEN) : Text.literal("OFF").formatted(Formatting.RED))
+                        .coloured(true))
+                    .build())
+                .group(OptionGroup.createBuilder()
+                    .name(Text.literal("Commands"))
+                    .collapsed(false)
+                    .option(LabelOption.create(Text.literal("/sre missing regular - Show missing regular enchantments").formatted(Formatting.YELLOW)))
+                    .option(LabelOption.create(Text.literal("/sre missing ultimate - Show ultimate enchantment status").formatted(Formatting.YELLOW)))
+                    .build())
+                .group(createSwordEnchantmentsGroup())
+                .group(createBowEnchantmentsGroup())
+                .group(createSwordUltimateEnchantmentsGroup())
+                .group(createBowUltimateEnchantmentsGroup())
+                .build())
+            .category(ConfigCategory.createBuilder()
+                .name(Text.literal("Misc"))
+                .tooltip(Text.literal("Miscellaneous settings"))
+                .option(Option.<Boolean>createBuilder()
+                    .name(Text.literal("No Hurt Cam"))
+                    .description(OptionDescription.of(Text.literal(
+                        "When enabled, the screen will not shake when you take damage.\n" +
+                        "Useful for reducing visual clutter during combat.")))
+                    .binding(
+                        false,
+                        () -> ConfigHandler.noHurtCam,
+                        newValue -> {
+                            ConfigHandler.noHurtCam = newValue;
+                            ConfigHandler.syncAndSave();
+                        })
+                    .controller(opt -> BooleanControllerBuilder.create(opt)
+                        .formatValue(val -> val ? Text.literal("ON").formatted(Formatting.GREEN) : Text.literal("OFF").formatted(Formatting.RED))
+                        .coloured(true))
+                    .build())
+                .build())
+            .category(ConfigCategory.createBuilder()
                 .name(Text.literal("Player Whitelist"))
                 .tooltip(Text.literal("Manage which players are always visible"))
                 .group(ListOption.<String>createBuilder()
@@ -276,12 +328,120 @@ public class SREGui {
                 .group(OptionGroup.createBuilder()
                     .name(Text.literal("About"))
                     .collapsed(false)
-                    .option(LabelOption.create(Text.literal("Skyblock Render Enhanced v1.0.5").formatted(Formatting.GOLD)))
+                    .option(LabelOption.create(Text.literal("Skyblock Render Enhanced v1.0.6").formatted(Formatting.GOLD)))
                     .option(LabelOption.create(Text.literal("For Minecraft 1.21.10 with Fabric").formatted(Formatting.GRAY)))
                     .option(LabelOption.create(Text.literal("Created for Hypixel Skyblock players").formatted(Formatting.GRAY)))
                     .build())
                 .build())
             .build()
             .generateScreen(parent);
+    }
+    
+    private static OptionGroup createSwordEnchantmentsGroup() {
+        OptionGroup.Builder builder = OptionGroup.createBuilder()
+            .name(Text.literal("Sword Enchantments"))
+            .collapsed(true)
+            .description(OptionDescription.of(Text.literal("Hover over an enchantment to see what it does")));
+        
+        for (Map.Entry<String, EnchantmentInfo> entry : EnchantmentData.getSwordEnchantments().entrySet()) {
+            EnchantmentInfo info = entry.getValue();
+            String displayText = info.name + " " + info.getLevelRange();
+            builder.option(Option.<Boolean>createBuilder()
+                .name(Text.literal(displayText).formatted(Formatting.AQUA))
+                .description(OptionDescription.of(
+                    Text.literal(info.name).formatted(Formatting.GOLD, Formatting.BOLD)
+                        .append(Text.literal(" " + info.getLevelRange()).formatted(Formatting.YELLOW))
+                        .append(Text.literal("\n\n"))
+                        .append(Text.literal(info.description).formatted(Formatting.WHITE))))
+                .binding(false, () -> false, v -> {})
+                .controller(opt -> BooleanControllerBuilder.create(opt)
+                    .formatValue(val -> Text.literal(""))
+                    .coloured(false))
+                .build());
+        }
+        
+        return builder.build();
+    }
+    
+    private static OptionGroup createBowEnchantmentsGroup() {
+        OptionGroup.Builder builder = OptionGroup.createBuilder()
+            .name(Text.literal("Bow Enchantments"))
+            .collapsed(true)
+            .description(OptionDescription.of(Text.literal("Hover over an enchantment to see what it does")));
+        
+        for (Map.Entry<String, EnchantmentInfo> entry : EnchantmentData.getBowEnchantments().entrySet()) {
+            EnchantmentInfo info = entry.getValue();
+            String displayText = info.name + " " + info.getLevelRange();
+            builder.option(Option.<Boolean>createBuilder()
+                .name(Text.literal(displayText).formatted(Formatting.LIGHT_PURPLE))
+                .description(OptionDescription.of(
+                    Text.literal(info.name).formatted(Formatting.GOLD, Formatting.BOLD)
+                        .append(Text.literal(" " + info.getLevelRange()).formatted(Formatting.YELLOW))
+                        .append(Text.literal("\n\n"))
+                        .append(Text.literal(info.description).formatted(Formatting.WHITE))))
+                .binding(false, () -> false, v -> {})
+                .controller(opt -> BooleanControllerBuilder.create(opt)
+                    .formatValue(val -> Text.literal(""))
+                    .coloured(false))
+                .build());
+        }
+        
+        return builder.build();
+    }
+    
+    private static OptionGroup createSwordUltimateEnchantmentsGroup() {
+        OptionGroup.Builder builder = OptionGroup.createBuilder()
+            .name(Text.literal("Sword Ultimate Enchantments"))
+            .collapsed(true)
+            .description(OptionDescription.of(Text.literal("Only ONE ultimate enchantment can be applied per item")));
+        
+        for (Map.Entry<String, EnchantmentInfo> entry : EnchantmentData.getSwordUltimateEnchantments().entrySet()) {
+            EnchantmentInfo info = entry.getValue();
+            String displayText = info.name + " " + info.getLevelRange();
+            builder.option(Option.<Boolean>createBuilder()
+                .name(Text.literal(displayText).formatted(Formatting.LIGHT_PURPLE, Formatting.BOLD))
+                .description(OptionDescription.of(
+                    Text.literal(info.name).formatted(Formatting.LIGHT_PURPLE, Formatting.BOLD)
+                        .append(Text.literal(" " + info.getLevelRange()).formatted(Formatting.YELLOW))
+                        .append(Text.literal("\n\n"))
+                        .append(Text.literal(info.description).formatted(Formatting.WHITE))
+                        .append(Text.literal("\n\n"))
+                        .append(Text.literal("(Ultimate - Only one can be applied)").formatted(Formatting.GOLD))))
+                .binding(false, () -> false, v -> {})
+                .controller(opt -> BooleanControllerBuilder.create(opt)
+                    .formatValue(val -> Text.literal(""))
+                    .coloured(false))
+                .build());
+        }
+        
+        return builder.build();
+    }
+    
+    private static OptionGroup createBowUltimateEnchantmentsGroup() {
+        OptionGroup.Builder builder = OptionGroup.createBuilder()
+            .name(Text.literal("Bow Ultimate Enchantments"))
+            .collapsed(true)
+            .description(OptionDescription.of(Text.literal("Only ONE ultimate enchantment can be applied per item")));
+        
+        for (Map.Entry<String, EnchantmentInfo> entry : EnchantmentData.getBowUltimateEnchantments().entrySet()) {
+            EnchantmentInfo info = entry.getValue();
+            String displayText = info.name + " " + info.getLevelRange();
+            builder.option(Option.<Boolean>createBuilder()
+                .name(Text.literal(displayText).formatted(Formatting.LIGHT_PURPLE, Formatting.BOLD))
+                .description(OptionDescription.of(
+                    Text.literal(info.name).formatted(Formatting.LIGHT_PURPLE, Formatting.BOLD)
+                        .append(Text.literal(" " + info.getLevelRange()).formatted(Formatting.YELLOW))
+                        .append(Text.literal("\n\n"))
+                        .append(Text.literal(info.description).formatted(Formatting.WHITE))
+                        .append(Text.literal("\n\n"))
+                        .append(Text.literal("(Ultimate - Only one can be applied)").formatted(Formatting.GOLD))))
+                .binding(false, () -> false, v -> {})
+                .controller(opt -> BooleanControllerBuilder.create(opt)
+                    .formatValue(val -> Text.literal(""))
+                    .coloured(false))
+                .build());
+        }
+        
+        return builder.build();
     }
 }

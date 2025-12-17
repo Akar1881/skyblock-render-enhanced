@@ -6,6 +6,11 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import me.akar1881.sre.config.ConfigHandler;
 import me.akar1881.sre.counter.PartySlayerCounter;
+import me.akar1881.sre.enchantment.EnchantmentData;
+import me.akar1881.sre.enchantment.EnchantmentData.EnchantmentInfo;
+import me.akar1881.sre.enchantment.EnchantmentHelper;
+import me.akar1881.sre.enchantment.EnchantmentHelper.MissingEnchantment;
+import me.akar1881.sre.enchantment.EnchantmentHelper.UltimateEnchantmentResult;
 import me.akar1881.sre.gui.SREGui;
 import me.akar1881.sre.gui.WidgetPositionGui;
 import me.akar1881.sre.util.OnlinePlayers;
@@ -13,6 +18,7 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -310,6 +316,163 @@ public class SRECommand {
                     );
                     return 1;
                 }))
+            .then(ClientCommandManager.literal("missing")
+                .executes(context -> {
+                    context.getSource().sendFeedback(Text.literal("[SRE] ")
+                        .formatted(Formatting.GREEN)
+                        .append(Text.literal("Usage: /sre missing regular OR /sre missing ultimate")
+                            .formatted(Formatting.YELLOW)));
+                    return 1;
+                })
+                .then(ClientCommandManager.literal("regular")
+                    .executes(context -> {
+                        if (!ConfigHandler.enchantmentHelperEnabled) {
+                            context.getSource().sendFeedback(Text.literal("[SRE] ")
+                                .formatted(Formatting.GREEN)
+                                .append(Text.literal("Enchantment Helper is disabled. Enable it in settings first.")
+                                    .formatted(Formatting.RED)));
+                            return 1;
+                        }
+                        
+                        ItemStack heldItem = EnchantmentHelper.getHeldItem();
+                        if (heldItem.isEmpty()) {
+                            context.getSource().sendFeedback(Text.literal("[SRE] ")
+                                .formatted(Formatting.GREEN)
+                                .append(Text.literal("You are not holding any item!")
+                                    .formatted(Formatting.RED)));
+                            return 1;
+                        }
+                        
+                        EnchantmentData.ItemType itemType = EnchantmentHelper.detectItemType(heldItem);
+                        if (itemType == null) {
+                            context.getSource().sendFeedback(Text.literal("[SRE] ")
+                                .formatted(Formatting.GREEN)
+                                .append(Text.literal("This item is not a recognized sword or bow!")
+                                    .formatted(Formatting.RED)));
+                            return 1;
+                        }
+                        
+                        List<MissingEnchantment> missing = EnchantmentHelper.getMissingEnchantments(heldItem);
+                        
+                        if (missing.isEmpty()) {
+                            context.getSource().sendFeedback(Text.literal("[SRE] ")
+                                .formatted(Formatting.GREEN)
+                                .append(Text.literal("This item has all regular enchantments at max level!")
+                                    .formatted(Formatting.GOLD)));
+                            return 1;
+                        }
+                        
+                        String itemTypeName = itemType == EnchantmentData.ItemType.BOW ? "Bow" : "Sword";
+                        context.getSource().sendFeedback(Text.literal("------------")
+                            .formatted(Formatting.DARK_PURPLE)
+                            .append(Text.literal("[Missing Regular Enchantments - " + itemTypeName + "]")
+                                .formatted(Formatting.GOLD))
+                            .append(Text.literal("------------")
+                                .formatted(Formatting.DARK_PURPLE)));
+                        
+                        for (MissingEnchantment enchant : missing) {
+                            String missingLevels = enchant.getMissingLevelsString();
+                            if (!missingLevels.isEmpty()) {
+                                context.getSource().sendFeedback(Text.literal("  ")
+                                    .append(Text.literal(enchant.name + " ")
+                                        .formatted(Formatting.AQUA))
+                                    .append(Text.literal(missingLevels)
+                                        .formatted(Formatting.YELLOW)));
+                            }
+                        }
+                        
+                        context.getSource().sendFeedback(Text.literal("------------------------------------------")
+                            .formatted(Formatting.DARK_PURPLE));
+                        
+                        return 1;
+                    }))
+                .then(ClientCommandManager.literal("ultimate")
+                    .executes(context -> {
+                        if (!ConfigHandler.enchantmentHelperEnabled) {
+                            context.getSource().sendFeedback(Text.literal("[SRE] ")
+                                .formatted(Formatting.GREEN)
+                                .append(Text.literal("Enchantment Helper is disabled. Enable it in settings first.")
+                                    .formatted(Formatting.RED)));
+                            return 1;
+                        }
+                        
+                        ItemStack heldItem = EnchantmentHelper.getHeldItem();
+                        if (heldItem.isEmpty()) {
+                            context.getSource().sendFeedback(Text.literal("[SRE] ")
+                                .formatted(Formatting.GREEN)
+                                .append(Text.literal("You are not holding any item!")
+                                    .formatted(Formatting.RED)));
+                            return 1;
+                        }
+                        
+                        EnchantmentData.ItemType itemType = EnchantmentHelper.detectItemType(heldItem);
+                        if (itemType == null) {
+                            context.getSource().sendFeedback(Text.literal("[SRE] ")
+                                .formatted(Formatting.GREEN)
+                                .append(Text.literal("This item is not a recognized sword or bow!")
+                                    .formatted(Formatting.RED)));
+                            return 1;
+                        }
+                        
+                        UltimateEnchantmentResult result = EnchantmentHelper.getUltimateEnchantmentStatus(heldItem);
+                        if (result == null) {
+                            context.getSource().sendFeedback(Text.literal("[SRE] ")
+                                .formatted(Formatting.GREEN)
+                                .append(Text.literal("Could not check ultimate enchantments!")
+                                    .formatted(Formatting.RED)));
+                            return 1;
+                        }
+                        
+                        String itemTypeName = itemType == EnchantmentData.ItemType.BOW ? "Bow" : "Sword";
+                        context.getSource().sendFeedback(Text.literal("------------")
+                            .formatted(Formatting.LIGHT_PURPLE)
+                            .append(Text.literal("[Ultimate Enchantments - " + itemTypeName + "]")
+                                .formatted(Formatting.GOLD))
+                            .append(Text.literal("------------")
+                                .formatted(Formatting.LIGHT_PURPLE)));
+                        
+                        if (result.hasUltimate) {
+                            if (result.isMaxLevel) {
+                                context.getSource().sendFeedback(Text.literal("  ")
+                                    .append(Text.literal("Applied: ")
+                                        .formatted(Formatting.WHITE))
+                                    .append(Text.literal(result.appliedName + " " + EnchantmentData.toRoman(result.appliedLevel))
+                                        .formatted(Formatting.LIGHT_PURPLE, Formatting.BOLD))
+                                    .append(Text.literal(" (MAX LEVEL)")
+                                        .formatted(Formatting.GREEN, Formatting.BOLD)));
+                            } else {
+                                context.getSource().sendFeedback(Text.literal("  ")
+                                    .append(Text.literal("Applied: ")
+                                        .formatted(Formatting.WHITE))
+                                    .append(Text.literal(result.appliedName + " " + EnchantmentData.toRoman(result.appliedLevel))
+                                        .formatted(Formatting.LIGHT_PURPLE, Formatting.BOLD)));
+                                context.getSource().sendFeedback(Text.literal("  ")
+                                    .append(Text.literal("Next tier: ")
+                                        .formatted(Formatting.WHITE))
+                                    .append(Text.literal(result.appliedName + " " + EnchantmentData.toRoman(result.getNextLevel()))
+                                        .formatted(Formatting.YELLOW)));
+                            }
+                        } else {
+                            context.getSource().sendFeedback(Text.literal("  ")
+                                .append(Text.literal("No ultimate enchantment applied!")
+                                    .formatted(Formatting.RED)));
+                            context.getSource().sendFeedback(Text.literal("  ")
+                                .append(Text.literal("Available ultimate enchantments:")
+                                    .formatted(Formatting.WHITE)));
+                            
+                            for (Map.Entry<String, EnchantmentInfo> entry : result.availableUltimates.entrySet()) {
+                                EnchantmentInfo info = entry.getValue();
+                                context.getSource().sendFeedback(Text.literal("    ")
+                                    .append(Text.literal("- " + info.name + " " + info.getLevelRange())
+                                        .formatted(Formatting.LIGHT_PURPLE)));
+                            }
+                        }
+                        
+                        context.getSource().sendFeedback(Text.literal("------------------------------------------")
+                            .formatted(Formatting.LIGHT_PURPLE));
+                        
+                        return 1;
+                    })))
             .then(ClientCommandManager.literal("whitelist")
                 .then(ClientCommandManager.literal("add")
                     .then(ClientCommandManager.argument("player", StringArgumentType.word())
@@ -399,6 +562,10 @@ public class SRECommand {
             .append(Text.literal("+ ")
                 .formatted(Formatting.RED))
             .append(Text.literal("/sre whitelist remove <player> - Remove player\n")
+                .formatted(Formatting.BLUE))
+            .append(Text.literal("+ ")
+                .formatted(Formatting.RED))
+            .append(Text.literal("/sre missing - Show missing enchantments on held item\n")
                 .formatted(Formatting.BLUE))
             .append(Text.literal("------------------------------------------")
                 .formatted(Formatting.DARK_BLUE));

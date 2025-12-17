@@ -49,6 +49,37 @@ Track how many slayer bosses you've killed for party members - perfect for slaye
 - Manual adjustment for when auto-detection misses or double-counts
 - Never lose count even after hundreds of boss kills!
 
+### Enchantment Helper (v1.0.6)
+Check what enchantments your sword or bow is missing - both regular and ultimate!
+
+**Features:**
+- Use `/sre missing regular` to see all missing regular enchantments
+- Use `/sre missing ultimate` to check ultimate enchantment status
+- Shows missing enchantment levels (e.g., if you have Power II, it shows Power III, IV, V, VI, VII)
+- Ultimate enchantments: Only ONE can be applied per item
+  - If applied: Shows current level and next tier (or MAX if already maxed)
+  - If not applied: Shows list of all available ultimate enchantments
+- Supports all Hypixel Skyblock sword and bow enchantments
+- Hover over enchantments in GUI to see descriptions
+- Enable/disable in the Enchantment Helper GUI page
+
+**Supported Sword Enchantments:**
+Bane Of Arthropods, Champion, Cleave, Critical, Cubism, Divine Gift, Dragon Hunter, Ender Slayer, Execute, Experience, Fire Aspect, First Strike, Impaling, Knockback, Lethality, Life Steal, Looting, Luck, Mana Steal, Prosecute, Scavenger, Sharpness, Smite, Smoldering, Drain, Tabasco, Thunderbolt, Thunderlord, Titan Killer, Triple-Strike, Vampirism, Venomous, Vicious
+
+**Supported Bow Enchantments:**
+Chance, Cubism, Dragon Tracer, Flame, Gravity, Impaling, Infinite Quiver, Piercing, Overload, Power, Punch, Snipe, Tabasco, Dragon Hunter, Divine Gift, Toxophilite, Smoldering, Vicious
+
+**Sword Ultimate Enchantments:**
+Ultimate Wise, Ultimate Jerry, Swarm, Soul Eater, One For All, Inferno, Fatal Tempo, Combo, Chimera
+
+**Bow Ultimate Enchantments:**
+Ultimate Wise, Swarm, Soul Eater, Rend, Inferno, Fatal Tempo, Duplex
+
+### No Hurt Cam (v1.0.6)
+Disable the annoying screen shake when you take damage!
+- Toggle on/off in the Misc GUI page
+- Perfect for intense combat situations where screen shake is distracting
+
 ### Config GUI (YACL)
 All settings can be adjusted through a clean configuration menu powered by YACL.
 
@@ -83,6 +114,8 @@ Designed to run smoothly in busy Skyblock environments with optimized caching an
 | `/sre widget` | Open widget position editor |
 | `/sre whitelist add <player>` | Add a player to the whitelist |
 | `/sre whitelist remove <player>` | Remove a player from the whitelist |
+| `/sre missing regular` | Show missing regular enchantments on held sword/bow |
+| `/sre missing ultimate` | Show ultimate enchantment status on held sword/bow |
 
 ---
 
