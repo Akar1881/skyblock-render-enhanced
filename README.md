@@ -1,6 +1,6 @@
 # Skyblock Render Enhanced (SRE)
 
-[![Modrinth](https://img.shields.io/modrinth/dt/sre?label=Modrinth%20Downloads&color=00AF5C&logo=modrinth)](https://modrinth.com/mod/skyblocker-render-enhanced)
+[![Modrinth](https://img.shields.io/modrinth/dt/sre?label=Modrinth%20Downloads&color=00AF5C&logo=modrinth)](https://modrinth.com/mod/sre)
 ![Java](https://img.shields.io/badge/Java-21+-red)
 ![Minecraft](https://img.shields.io/badge/Minecraft-1.21.10-blue)
 ![Fabric Loader](https://img.shields.io/badge/Fabric%20Loader-0.18.2+-black)
