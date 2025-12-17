@@ -33,7 +33,7 @@ public class SREGui {
             Keybinds.toggleSlayer.getBoundKeyLocalizedText().getString() : "B";
 
         return YetAnotherConfigLib.createBuilder()
-            .title(Text.literal("Skyblock Render Enhanced v1.0.6"))
+            .title(Text.literal("Skyblock Render Enhanced v1.0.7"))
             .category(ConfigCategory.createBuilder()
                 .name(Text.literal("General"))
                 .tooltip(Text.literal("General settings for SRE"))
@@ -280,6 +280,31 @@ public class SREGui {
                         .formatValue(val -> val ? Text.literal("ON").formatted(Formatting.GREEN) : Text.literal("OFF").formatted(Formatting.RED))
                         .coloured(true))
                     .build())
+                .option(Option.<Boolean>createBuilder()
+                    .name(Text.literal("Dungeon Join Helper"))
+                    .description(OptionDescription.of(Text.literal(
+                        "When enabled, you can use quick dungeon join commands:\n" +
+                        "/f1 - /f7 for normal floors\n" +
+                        "/m1 - /m7 for master mode\n\n" +
+                        "These commands will automatically run /joindungeon for you.")))
+                    .binding(
+                        true,
+                        () -> ConfigHandler.dungeonJoinHelperEnabled,
+                        newValue -> {
+                            ConfigHandler.dungeonJoinHelperEnabled = newValue;
+                            ConfigHandler.syncAndSave();
+                        })
+                    .controller(opt -> BooleanControllerBuilder.create(opt)
+                        .formatValue(val -> val ? Text.literal("ON").formatted(Formatting.GREEN) : Text.literal("OFF").formatted(Formatting.RED))
+                        .coloured(true))
+                    .build())
+                .group(OptionGroup.createBuilder()
+                    .name(Text.literal("Slayer Carry Calculator"))
+                    .collapsed(false)
+                    .option(LabelOption.create(Text.literal("/sre counter math slayer <type> <tier> <price> <amount> [discount]").formatted(Formatting.YELLOW)))
+                    .option(LabelOption.create(Text.literal("/sre counter math xp <type> <tier> <currentXP/targetXP> <xpPerBoss>").formatted(Formatting.YELLOW)))
+                    .option(LabelOption.create(Text.literal("Calculate prices and XP for slayer carries!").formatted(Formatting.GRAY)))
+                    .build())
                 .build())
             .category(ConfigCategory.createBuilder()
                 .name(Text.literal("Player Whitelist"))
@@ -328,7 +353,7 @@ public class SREGui {
                 .group(OptionGroup.createBuilder()
                     .name(Text.literal("About"))
                     .collapsed(false)
-                    .option(LabelOption.create(Text.literal("Skyblock Render Enhanced v1.0.6").formatted(Formatting.GOLD)))
+                    .option(LabelOption.create(Text.literal("Skyblock Render Enhanced v1.0.7").formatted(Formatting.GOLD)))
                     .option(LabelOption.create(Text.literal("For Minecraft 1.21.10 with Fabric").formatted(Formatting.GRAY)))
                     .option(LabelOption.create(Text.literal("Created for Hypixel Skyblock players").formatted(Formatting.GRAY)))
                     .build())

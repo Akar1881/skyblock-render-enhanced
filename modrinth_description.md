@@ -49,7 +49,36 @@ Track how many slayer bosses you've killed for party members - perfect for slaye
 - Manual adjustment for when auto-detection misses or double-counts
 - Never lose count even after hundreds of boss kills!
 
-### Enchantment Helper (v1.0.6)
+### Slayer Carry Calculator 
+Calculate prices and XP requirements for slayer carries!
+
+**Price Calculator:**
+- `/sre counter math slayer <type> <tier> <price> <amount> [discount%]`
+- Calculates total price with optional discount (0-100%)
+- Click to share the calculation in chat with [SRE] branding to prove your pricing
+
+**XP Calculator:**
+- `/sre counter math xp <type> <tier> <currentXP/targetXP> [xpPerBoss]`
+- Calculates how many bosses you need to reach your target XP
+- Optional: Specify custom XP per boss at the end (uses default tier XP if not specified)
+- Click to share the calculation in chat with [SRE] branding
+
+**Supported Slayer Types:**
+- Voidgloom Seraph (T1-T4)
+- Revenant Horror (T1-T5)
+- Tarantula Broodfather (T1-T4)
+- Sven Packmaster (T1-T4)
+- Inferno Demonlord (T1-T4)
+- Riftstalker Bloodfiend (T1-T5)
+
+### Dungeon Join Helper 
+Quick commands to join dungeons instantly!
+
+- `/f1` - `/f7` for normal Catacombs floors
+- `/m1` - `/m7` for Master Mode floors
+- Enable/disable in the Misc settings
+
+### Enchantment Helper
 Check what enchantments your sword or bow is missing - both regular and ultimate!
 
 **Features:**
@@ -75,7 +104,7 @@ Ultimate Wise, Ultimate Jerry, Swarm, Soul Eater, One For All, Inferno, Fatal Te
 **Bow Ultimate Enchantments:**
 Ultimate Wise, Swarm, Soul Eater, Rend, Inferno, Fatal Tempo, Duplex
 
-### No Hurt Cam (v1.0.6)
+### No Hurt Cam
 Disable the annoying screen shake when you take damage!
 - Toggle on/off in the Misc GUI page
 - Perfect for intense combat situations where screen shake is distracting
@@ -111,11 +140,15 @@ Designed to run smoothly in busy Skyblock environments with optimized caching an
 | `/sre counter add <player> [amount]` | Add kills for a player (default: 1) |
 | `/sre counter remove <player> [amount]` | Remove kills for a player (default: 1) |
 | `/sre counter clear [player]` | Clear all counter data, or specific player |
+| `/sre counter math slayer <type> <tier> <price> <amount> [discount%]` | Calculate slayer carry price |
+| `/sre counter math xp <type> <tier> <currentXP/targetXP> [xpPerBoss]` | Calculate bosses needed for XP |
 | `/sre widget` | Open widget position editor |
 | `/sre whitelist add <player>` | Add a player to the whitelist |
 | `/sre whitelist remove <player>` | Remove a player from the whitelist |
 | `/sre missing regular` | Show missing regular enchantments on held sword/bow |
 | `/sre missing ultimate` | Show ultimate enchantment status on held sword/bow |
+| `/f1` - `/f7` | Quick join Catacombs floors 1-7 |
+| `/m1` - `/m7` | Quick join Master Mode floors 1-7 |
 
 ---
 

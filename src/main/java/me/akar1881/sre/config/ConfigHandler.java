@@ -63,6 +63,7 @@ public class ConfigHandler {
     
     public static boolean enchantmentHelperEnabled = true;
     public static boolean noHurtCam = false;
+    public static boolean dungeonJoinHelperEnabled = true;
     
     public static void load() {
         try {
@@ -110,6 +111,7 @@ public class ConfigHandler {
         counterMode = config.counterMode;
         enchantmentHelperEnabled = config.enchantmentHelperEnabled;
         noHurtCam = config.noHurtCam;
+        dungeonJoinHelperEnabled = config.dungeonJoinHelperEnabled;
     }
     
     private static void syncFromFields() {
@@ -127,6 +129,7 @@ public class ConfigHandler {
         config.counterMode = counterMode;
         config.enchantmentHelperEnabled = enchantmentHelperEnabled;
         config.noHurtCam = noHurtCam;
+        config.dungeonJoinHelperEnabled = dungeonJoinHelperEnabled;
     }
     
     public static void syncAndSave() {
@@ -170,6 +173,7 @@ public class ConfigHandler {
         public CounterMode counterMode = CounterMode.AUTO;
         public boolean enchantmentHelperEnabled = true;
         public boolean noHurtCam = false;
+        public boolean dungeonJoinHelperEnabled = true;
     }
     
     private static class ConfigDataDeserializer implements JsonDeserializer<ConfigData> {
@@ -229,6 +233,9 @@ public class ConfigHandler {
             }
             if (obj.has("noHurtCam")) {
                 data.noHurtCam = obj.get("noHurtCam").getAsBoolean();
+            }
+            if (obj.has("dungeonJoinHelperEnabled")) {
+                data.dungeonJoinHelperEnabled = obj.get("dungeonJoinHelperEnabled").getAsBoolean();
             }
             
             Set<String> allPlayers = new LinkedHashSet<>();
