@@ -200,7 +200,7 @@ Runs smoothly even in the busiest lobbies.
    https://modrinth.com/mod/fabric-api
 
 3. Download **Skyblock Render Enhanced** from Modrinth:  
-   https://modrinth.com/mod/skyblocker-render-enhanced
+   https://modrinth.com/mod/sre
 
 4. Place the `.jar` file inside:  
    `.minecraft/mods/`
