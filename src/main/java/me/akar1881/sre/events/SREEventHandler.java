@@ -48,7 +48,7 @@ public class SREEventHandler {
                         if (ConfigHandler.renderPlayers) {
                             ConfigHandler.slayerMode = ConfigHandler.SlayerMode.OFF;
                         } else {
-                            ConfigHandler.slayerMode = ConfigHandler.SlayerMode.HIDE;
+                            ConfigHandler.slayerMode = ConfigHandler.SlayerMode.GLOW;
                         }
                     }
                     
@@ -71,10 +71,10 @@ public class SREEventHandler {
                     }
                     
                     if (ConfigHandler.linkSlayerToPlayer) {
-                        Formatting color = ConfigHandler.slayerMode == ConfigHandler.SlayerMode.OFF ? Formatting.GRAY : Formatting.RED;
+                        Formatting color = ConfigHandler.slayerMode == ConfigHandler.SlayerMode.OFF ? Formatting.GRAY : Formatting.GREEN;
                         client.player.sendMessage(Text.literal("[SRE] ")
                             .formatted(Formatting.GREEN)
-                            .append(Text.literal("Slayer mode also set to: ")
+                            .append(Text.literal("Slayer highlight also set to: ")
                                 .formatted(Formatting.GRAY))
                             .append(Text.literal(ConfigHandler.slayerMode.getDisplayName())
                                 .formatted(color, Formatting.BOLD)), false);
@@ -82,21 +82,16 @@ public class SREEventHandler {
                 }
                 
                 while (Keybinds.toggleSlayer.wasPressed()) {
-                    ConfigHandler.SlayerMode[] modes = ConfigHandler.SlayerMode.values();
-                    int currentIndex = ConfigHandler.slayerMode.ordinal();
-                    int nextIndex = (currentIndex + 1) % modes.length;
-                    ConfigHandler.slayerMode = modes[nextIndex];
+                    ConfigHandler.slayerMode = ConfigHandler.slayerMode == ConfigHandler.SlayerMode.OFF ? 
+                        ConfigHandler.SlayerMode.GLOW : ConfigHandler.SlayerMode.OFF;
                     ConfigHandler.syncAndSave();
                     
-                    Formatting color = switch (ConfigHandler.slayerMode) {
-                        case OFF -> Formatting.GRAY;
-                        case HIDE -> Formatting.RED;
-                        case GLOW -> Formatting.GREEN;
-                    };
+                    Formatting color = ConfigHandler.slayerMode == ConfigHandler.SlayerMode.OFF ? 
+                        Formatting.GRAY : Formatting.GREEN;
                     
                     client.player.sendMessage(Text.literal("[SRE] ")
                         .formatted(Formatting.GREEN)
-                        .append(Text.literal("Slayer mode: ")
+                        .append(Text.literal("Slayer highlight: ")
                             .formatted(Formatting.WHITE))
                         .append(Text.literal(ConfigHandler.slayerMode.getDisplayName())
                             .formatted(Formatting.BOLD, color)), false);

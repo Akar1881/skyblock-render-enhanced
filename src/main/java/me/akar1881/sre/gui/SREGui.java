@@ -33,7 +33,7 @@ public class SREGui {
             Keybinds.toggleSlayer.getBoundKeyLocalizedText().getString() : "B";
 
         return YetAnotherConfigLib.createBuilder()
-            .title(Text.literal("Skyblock Render Enhanced v1.0.7"))
+            .title(Text.literal("Skyblock Render Enhanced v1.0.8"))
             .category(ConfigCategory.createBuilder()
                 .name(Text.literal("General"))
                 .tooltip(Text.literal("General settings for SRE"))
@@ -93,11 +93,10 @@ public class SREGui {
                 .name(Text.literal("Slayer"))
                 .tooltip(Text.literal("Control slayer boss visibility"))
                 .option(Option.<SlayerMode>createBuilder()
-                    .name(Text.literal("Slayer Mode"))
+                    .name(Text.literal("Slayer Boss Highlight"))
                     .description(OptionDescription.of(Text.literal(
-                        "OFF: Show all slayer bosses (feature disabled)\n" +
-                        "HIDE: Hide other players' slayer bosses\n" +
-                        "GLOW: Highlight your/party/whitelist bosses with glow effect")))
+                        "OFF: Show all slayer bosses without highlight\n" +
+                        "ON: Highlight your/party/whitelist bosses with glow effect")))
                     .binding(
                         SlayerMode.OFF,
                         () -> ConfigHandler.slayerMode,
@@ -109,7 +108,6 @@ public class SREGui {
                         .enumClass(SlayerMode.class)
                         .formatValue(mode -> Text.literal(mode.getDisplayName()).formatted(
                             mode == SlayerMode.OFF ? Formatting.GRAY :
-                            mode == SlayerMode.HIDE ? Formatting.RED :
                             Formatting.GREEN)))
                     .build())
                 .option(Option.<Boolean>createBuilder()
@@ -124,6 +122,20 @@ public class SREGui {
                         })
                     .controller(opt -> BooleanControllerBuilder.create(opt)
                         .formatValue(val -> val ? Text.literal("YES").formatted(Formatting.GREEN) : Text.literal("NO").formatted(Formatting.RED))
+                        .coloured(true))
+                    .build())
+                .option(Option.<Boolean>createBuilder()
+                    .name(Text.literal("Boss Spawn Alert"))
+                    .description(OptionDescription.of(Text.literal("When enabled, alerts you in chat with a sound when your boss or party member's boss spawns.")))
+                    .binding(
+                        false,
+                        () -> ConfigHandler.slayerSpawnAlertEnabled,
+                        newValue -> {
+                            ConfigHandler.slayerSpawnAlertEnabled = newValue;
+                            ConfigHandler.syncAndSave();
+                        })
+                    .controller(opt -> BooleanControllerBuilder.create(opt)
+                        .formatValue(val -> val ? Text.literal("ON").formatted(Formatting.GREEN) : Text.literal("OFF").formatted(Formatting.RED))
                         .coloured(true))
                     .build())
                 .group(OptionGroup.createBuilder()
@@ -353,7 +365,7 @@ public class SREGui {
                 .group(OptionGroup.createBuilder()
                     .name(Text.literal("About"))
                     .collapsed(false)
-                    .option(LabelOption.create(Text.literal("Skyblock Render Enhanced v1.0.7").formatted(Formatting.GOLD)))
+                    .option(LabelOption.create(Text.literal("Skyblock Render Enhanced v1.0.8").formatted(Formatting.GOLD)))
                     .option(LabelOption.create(Text.literal("For Minecraft 1.21.10 with Fabric").formatted(Formatting.GRAY)))
                     .option(LabelOption.create(Text.literal("Created for Hypixel Skyblock players").formatted(Formatting.GRAY)))
                     .build())

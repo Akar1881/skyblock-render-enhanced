@@ -37,13 +37,13 @@ public class SlayerHandler {
     private static int tickCounter = 0;
     private static final int SCAN_INTERVAL = 5;
     
-    private static class SlayerBossData {
-        int bossEntityId;
-        String spawnerName;
-        Set<Integer> armorStandIds = ConcurrentHashMap.newKeySet();
-        double lastX, lastY, lastZ;
-        long lastSeenTick;
-        boolean isFriendly;
+    public static class SlayerBossData {
+        public int bossEntityId;
+        public String spawnerName;
+        public Set<Integer> armorStandIds = ConcurrentHashMap.newKeySet();
+        public double lastX, lastY, lastZ;
+        public long lastSeenTick;
+        public boolean isFriendly;
         
         SlayerBossData(int bossEntityId, String spawnerName, double x, double y, double z, long tick) {
             this.bossEntityId = bossEntityId;
@@ -101,6 +101,7 @@ public class SlayerHandler {
         if (tickCounter >= SCAN_INTERVAL) {
             tickCounter = 0;
             scanForSlayerBosses();
+            SlayerSpawnAlert.checkForNewSpawns(trackedBosses);
         }
         
         MinecraftClient client = MinecraftClient.getInstance();
@@ -380,6 +381,7 @@ public class SlayerHandler {
         armorStandToBoss.clear();
         renderCache.clear();
         glowCache.clear();
+        SlayerSpawnAlert.clear();
     }
     
     public static int getTrackedBossCount() {

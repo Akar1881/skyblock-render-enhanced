@@ -95,24 +95,40 @@ public class SRECommand {
                     }))
                 .then(ClientCommandManager.literal("slayer")
                     .executes(context -> {
-                        ConfigHandler.SlayerMode[] modes = ConfigHandler.SlayerMode.values();
-                        int currentIndex = ConfigHandler.slayerMode.ordinal();
-                        int nextIndex = (currentIndex + 1) % modes.length;
-                        ConfigHandler.slayerMode = modes[nextIndex];
+                        ConfigHandler.slayerMode = ConfigHandler.slayerMode == ConfigHandler.SlayerMode.OFF ? 
+                            ConfigHandler.SlayerMode.GLOW : ConfigHandler.SlayerMode.OFF;
                         ConfigHandler.syncAndSave();
                         
-                        Formatting color = switch (ConfigHandler.slayerMode) {
-                            case OFF -> Formatting.GRAY;
-                            case HIDE -> Formatting.RED;
-                            case GLOW -> Formatting.GREEN;
-                        };
+                        Formatting color = ConfigHandler.slayerMode == ConfigHandler.SlayerMode.OFF ? 
+                            Formatting.GRAY : Formatting.GREEN;
                         
                         context.getSource().sendFeedback(Text.literal("[SRE] ")
                             .formatted(Formatting.GREEN)
-                            .append(Text.literal("Slayer mode: ")
+                            .append(Text.literal("Slayer highlight: ")
                                 .formatted(Formatting.WHITE))
                             .append(Text.literal(ConfigHandler.slayerMode.getDisplayName())
                                 .formatted(Formatting.BOLD, color)));
+                        return 1;
+                    }))
+                .then(ClientCommandManager.literal("spawn-alert")
+                    .executes(context -> {
+                        ConfigHandler.slayerSpawnAlertEnabled = !ConfigHandler.slayerSpawnAlertEnabled;
+                        ConfigHandler.syncAndSave();
+                        if (ConfigHandler.slayerSpawnAlertEnabled) {
+                            context.getSource().sendFeedback(Text.literal("[SRE] ")
+                                .formatted(Formatting.GREEN)
+                                .append(Text.literal("Boss spawn alerts are now ")
+                                    .formatted(Formatting.GREEN))
+                                .append(Text.literal("on")
+                                    .formatted(Formatting.BOLD, Formatting.GREEN)));
+                        } else {
+                            context.getSource().sendFeedback(Text.literal("[SRE] ")
+                                .formatted(Formatting.GREEN)
+                                .append(Text.literal("Boss spawn alerts are now ")
+                                    .formatted(Formatting.RED))
+                                .append(Text.literal("off")
+                                    .formatted(Formatting.BOLD, Formatting.RED)));
+                        }
                         return 1;
                     }))
                 .then(ClientCommandManager.literal("counter")
@@ -612,7 +628,11 @@ public class SRECommand {
                 .formatted(Formatting.BLUE))
             .append(Text.literal("+ ")
                 .formatted(Formatting.RED))
-            .append(Text.literal("/sre toggle slayer - Cycle slayer mode (Off/Hide/Glow)\n")
+            .append(Text.literal("/sre toggle slayer - Toggle slayer highlight (Off/On)\n")
+                .formatted(Formatting.BLUE))
+            .append(Text.literal("+ ")
+                .formatted(Formatting.RED))
+            .append(Text.literal("/sre toggle spawn-alert - Toggle boss spawn alerts\n")
                 .formatted(Formatting.BLUE))
             .append(Text.literal("+ ")
                 .formatted(Formatting.RED))

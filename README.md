@@ -32,21 +32,14 @@ Clean and simple settings menu powered by YACL (Yet Another Config Lib).
 
 ![Config GUI](pictures/configgui.png)
 
-### Slayer Config GUI
 
-![Slayer Config GUI](pictures/configslayergui.png)
-
-### Slayer Normal Mode
+### Slayer Highlight Off
 
 ![Slayer Normal](pictures/slayernormalmode.png)
 
-### Slayer Highlight Mode
+### Slayer Highlight On
 
 ![Slayer Highlighted](pictures/slayerhighlightmode.png)
-
-### Slayer Hide Mode
-
-![Slayer Hidden](pictures/slayerhidemode.png)
 
 ### Enchantment Helper GUI
 
@@ -75,10 +68,9 @@ Hide all players except those you've added to your allowlist.
 Keep specific players **always visible**, even when hiding everyone else.
 
 ### Slayer Boss Management
-Control visibility of slayer bosses with multiple modes:
-- **Off**: Show all slayer bosses (feature disabled)
-- **Hide**: Hide other players' slayer bosses, show yours and party/whitelisted players' bosses
-- **Glow**: Highlight your, party members', and whitelisted players' slayer bosses with a glow effect
+Control slayer boss highlighting with two modes:
+- **Off**: Show all slayer bosses without highlight
+- **On**: Highlight your, party members', and whitelisted players' slayer bosses with a glow effect
 
 Supported Slayer Bosses:
 - Voidgloom Seraph
@@ -87,6 +79,21 @@ Supported Slayer Bosses:
 - Sven Packmaster
 - Inferno Demonlord
 - Riftstalker Bloodfiend
+
+### Slayer Spawn Alert
+Get instant notifications when a slayer boss spawns!
+
+**Features:**
+- Displays a chat message alert when a slayer boss spawns (for your own or party members' bosses)
+- Plays a notification sound to grab your attention instantly
+- Automatically enabled/disabled based on your settings
+- Perfect for group slayer runs - never miss a spawn again!
+
+**How it works:**
+- Enable in the Slayer settings GUI
+- When you or a party member spawns a boss, you'll see a message like: "[SRE] Boss Spawned: Slayer Boss by PlayerName"
+- A distinctive sound effect plays to notify you immediately
+- Works with all supported slayer types
 
 ### Party Slayer Counter 
 Track how many slayer bosses you've killed for party members - perfect for slayer carries!
@@ -218,7 +225,7 @@ Runs smoothly even in the busiest lobbies.
 | `/sre` | Open the config GUI |
 | `/sre help` | Show list of commands |
 | `/sre toggle player` | Toggle player rendering on/off |
-| `/sre toggle slayer` | Cycle slayer mode (Off/Hide/Glow) |
+| `/sre toggle slayer` | Toggle slayer highlight (Off/On) |
 | `/sre toggle counter` | Toggle party slayer counter on/off |
 | `/sre counter` | Show party slayer kill counts |
 | `/sre counter mode` | Toggle between Auto and Manual mode |
@@ -245,7 +252,7 @@ Runs smoothly even in the busiest lobbies.
 |-----|--------|
 | `M` | Open SRE config GUI |
 | `V` | Toggle player rendering on/off |
-| `B` | Cycle slayer mode |
+| `B` | Toggle slayer highlight |
 
 ---
 

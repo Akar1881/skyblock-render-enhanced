@@ -14,14 +14,12 @@ public class ConfigHandler {
     
     public enum SlayerMode {
         OFF,
-        HIDE,
         GLOW;
         
         public String getDisplayName() {
             return switch (this) {
-                case OFF -> "Off (Show All)";
-                case HIDE -> "Hide Others";
-                case GLOW -> "Highlight Mine";
+                case OFF -> "Highlight Off";
+                case GLOW -> "Highlight On";
             };
         }
     }
@@ -64,6 +62,7 @@ public class ConfigHandler {
     public static boolean enchantmentHelperEnabled = true;
     public static boolean noHurtCam = false;
     public static boolean dungeonJoinHelperEnabled = true;
+    public static boolean slayerSpawnAlertEnabled = false;
     
     public static void load() {
         try {
@@ -112,6 +111,7 @@ public class ConfigHandler {
         enchantmentHelperEnabled = config.enchantmentHelperEnabled;
         noHurtCam = config.noHurtCam;
         dungeonJoinHelperEnabled = config.dungeonJoinHelperEnabled;
+        slayerSpawnAlertEnabled = config.slayerSpawnAlertEnabled;
     }
     
     private static void syncFromFields() {
@@ -130,6 +130,7 @@ public class ConfigHandler {
         config.enchantmentHelperEnabled = enchantmentHelperEnabled;
         config.noHurtCam = noHurtCam;
         config.dungeonJoinHelperEnabled = dungeonJoinHelperEnabled;
+        config.slayerSpawnAlertEnabled = slayerSpawnAlertEnabled;
     }
     
     public static void syncAndSave() {
@@ -174,6 +175,7 @@ public class ConfigHandler {
         public boolean enchantmentHelperEnabled = true;
         public boolean noHurtCam = false;
         public boolean dungeonJoinHelperEnabled = true;
+        public boolean slayerSpawnAlertEnabled = false;
     }
     
     private static class ConfigDataDeserializer implements JsonDeserializer<ConfigData> {
@@ -236,6 +238,9 @@ public class ConfigHandler {
             }
             if (obj.has("dungeonJoinHelperEnabled")) {
                 data.dungeonJoinHelperEnabled = obj.get("dungeonJoinHelperEnabled").getAsBoolean();
+            }
+            if (obj.has("slayerSpawnAlertEnabled")) {
+                data.slayerSpawnAlertEnabled = obj.get("slayerSpawnAlertEnabled").getAsBoolean();
             }
             
             Set<String> allPlayers = new LinkedHashSet<>();
