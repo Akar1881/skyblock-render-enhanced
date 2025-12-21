@@ -180,7 +180,7 @@ Designed to run smoothly in busy Skyblock environments with optimized caching an
 
 ## Requirements
 
-- Minecraft 1.21.10  
+- Minecraft 1.21.11  
 - Fabric Loader 0.18.2+  
 - Fabric API  
 - Java 21+

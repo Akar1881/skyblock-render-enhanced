@@ -2,7 +2,7 @@
 
 [![Modrinth](https://img.shields.io/modrinth/dt/sre?label=Modrinth%20Downloads&color=00AF5C&logo=modrinth)](https://modrinth.com/mod/sre)
 ![Java](https://img.shields.io/badge/Java-21+-red)
-![Minecraft](https://img.shields.io/badge/Minecraft-1.21.10-blue)
+![Minecraft](https://img.shields.io/badge/Minecraft-1.21.11-blue)
 ![Fabric Loader](https://img.shields.io/badge/Fabric%20Loader-0.18.2+-black)
 ![License](https://img.shields.io/badge/License-GPL%203.0-green)
 
@@ -200,7 +200,7 @@ Runs smoothly even in the busiest lobbies.
 
 ## Installation
 
-1. Install **Fabric Loader 0.18.2+** for Minecraft 1.21.10  
+1. Install **Fabric Loader 0.18.2+** for Minecraft 1.21.11  
    https://fabricmc.net/use/installer/
 
 2. Install **Fabric API**  
@@ -270,7 +270,7 @@ build/libs/
 
 ## Requirements
 
-- Minecraft 1.21.10
+- Minecraft 1.21.11
 - Fabric Loader 0.18.2+
 - Fabric API
 - Java 21+
@@ -280,7 +280,7 @@ build/libs/
 ## Credits
 
 - Inspired by SRP (Select Player Renderer) by Syfe
-- Fully rewritten for Fabric 1.21.10 with YACL
+- Fully rewritten for Fabric 1.21.11 with YACL
 - Developed by akar1881
 
 ---
