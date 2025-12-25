@@ -22,6 +22,7 @@ public class SlayerKillDetector {
     private static final Pattern QUEST_FAILED_PATTERN = Pattern.compile("^\\s*(?:Your Slayer Quest has been cancelled!|SLAYER QUEST FAILED!)\\s*$");
     private static final Pattern PARTY_DISBAND_PATTERN = Pattern.compile("^\\s*(?:The party was disbanded|You have been kicked from the party|You left the party|The party has been disbanded|You are not currently in a party).*$", Pattern.CASE_INSENSITIVE);
     private static final Pattern LOOT_SHARE_PATTERN = Pattern.compile("LOOT SHARE You received loot for assisting ([A-Za-z0-9_]+)!");
+    private static final Pattern BOSS_NAME_PATTERN = Pattern.compile("Revenant Horror|Atoned Horror|Tarantula Broodfather|Sven Packmaster|Voidgloom Seraph|Inferno Demonlord|Riftstalker Bloodfiend|Bloodfiend", Pattern.CASE_INSENSITIVE);
     
     private static final Set<Integer> processedArmorStands = new HashSet<>();
     private static long lastCleanupTime = 0;
@@ -137,17 +138,44 @@ public class SlayerKillDetector {
                 }
                 
                 if (isConfirmedPartyMember(spawnerName)) {
-                    PartySlayerCounter.onBossDetected(spawnerName, standId);
-                    
-                    recentSpawners.put(spawnerName.toLowerCase(), System.currentTimeMillis());
-                    
-                    if (!processedArmorStands.contains(standId)) {
-                        processedArmorStands.add(standId);
-                        SkyblockRenderEnhanced.LOGGER.debug("Found boss for party member: {} (stand: {})", spawnerName, standId);
+                    if (isActualBoss(armorStand, spawnerName)) {
+                        PartySlayerCounter.onBossDetected(spawnerName, standId);
+                        
+                        recentSpawners.put(spawnerName.toLowerCase(), System.currentTimeMillis());
+                        
+                        if (!processedArmorStands.contains(standId)) {
+                            processedArmorStands.add(standId);
+                            SkyblockRenderEnhanced.LOGGER.debug("Found boss for party member: {} (stand: {})", spawnerName, standId);
+                        }
+                    } else {
+                        SkyblockRenderEnhanced.LOGGER.debug("Spawned by tag found for {} but not a recognized boss, ignoring", spawnerName);
                     }
                 }
             }
         }
+    }
+    
+    private static boolean isActualBoss(ArmorStandEntity armorStand, String spawnerName) {
+        String cleanName = stripColorCodes(armorStand.getCustomName().getString());
+        
+        if (BOSS_NAME_PATTERN.matcher(cleanName).find()) {
+            return true;
+        }
+        
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.world == null) return false;
+        
+        Box searchBox = armorStand.getBoundingBox().expand(2.0);
+        for (Entity entity : client.world.getOtherEntities(armorStand, searchBox)) {
+            if (entity instanceof ArmorStandEntity otherStand && otherStand.hasCustomName()) {
+                String otherCleanName = stripColorCodes(otherStand.getCustomName().getString());
+                if (BOSS_NAME_PATTERN.matcher(otherCleanName).find()) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
     }
     
     private static boolean isConfirmedPartyMember(String playerName) {
