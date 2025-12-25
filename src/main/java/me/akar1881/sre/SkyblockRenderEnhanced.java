@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 public class SkyblockRenderEnhanced implements ClientModInitializer {
     public static final String MOD_ID = "sre";
     public static final String MOD_NAME = "Skyblock Render Enhanced";
-    public static final String VERSION = "1.0.8";
+    public static final String VERSION = "1.0.9";
     
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
     
